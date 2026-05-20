@@ -1,1023 +1,2357 @@
-
+cat > /home/claude/strivio.html << 'HTMLEOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strivio — Where Creators Meet Sponsors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
-  *{margin:0;padding:0;box-sizing:border-box;}
-  :root{
-    --bg:#0a0a0c;--bg2:#111115;--bg3:#18181f;--bg4:#1e1e28;
-    --border:#ffffff12;--border2:#ffffff20;
-    --text:#f0f0f5;--text2:#9090a8;--text3:#60607a;
-    --accent:#e8303a;--accent2:#ff5560;--accentbg:#e8303a18;
-    --blue:#3b7dff;--bluebg:#3b7dff15;
-    --radius:12px;--radius2:8px;
-    font-family:'DM Sans',sans-serif;
-  }
-  .app{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
-  .page{display:none;} .page.active{display:block;}
+/* ─── RESET ─────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;}
+button{cursor:pointer;font-family:inherit;}
+a{text-decoration:none;color:inherit;}
+input,textarea{font-family:inherit;}
 
-  /* NAV */
-  .nav{
-    position:sticky;top:0;z-index:100;
-    background:rgba(10,10,12,0.85);
-    backdrop-filter:blur(16px);
-    border-bottom:1px solid var(--border);
-    padding:0 20px;height:56px;
-    display:flex;align-items:center;justify-content:space-between;
-  }
-  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--text);letter-spacing:-0.5px;cursor:pointer;}
-  .logo span{color:var(--accent);}
-  .nav-links{display:flex;align-items:center;gap:4px;}
-  .nav-btn{
-    background:none;border:none;color:var(--text2);
-    font-family:'DM Sans',sans-serif;font-size:13px;
-    padding:6px 12px;border-radius:var(--radius2);cursor:pointer;
-    transition:color 0.15s,background 0.15s;
-  }
-  .nav-btn:hover{color:var(--text);background:var(--bg3);}
-  .nav-btn.primary{
-    background:var(--accent);color:#fff;font-weight:500;
-  }
-  .nav-btn.primary:hover{background:var(--accent2);}
+/* ─── DESIGN TOKENS ──────────────────────────── */
+:root{
+  /* Backgrounds — layered slate */
+  --bg-base:     #0d0e11;
+  --bg-raised:   #131417;
+  --bg-float:    #1a1b1f;
+  --bg-overlay:  #202228;
+  --bg-hover:    #252830;
 
-  /* HERO */
-  .hero{
-    padding:80px 24px 60px;text-align:center;
-    position:relative;overflow:hidden;
-  }
-  .hero::before{
-    content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);
-    width:500px;height:300px;
-    background:radial-gradient(ellipse, rgba(232,48,58,0.12) 0%, transparent 70%);
-    pointer-events:none;
-  }
-  .hero-badge{
-    display:inline-flex;align-items:center;gap:6px;
-    background:var(--accentbg);border:1px solid rgba(232,48,58,0.25);
-    border-radius:20px;padding:4px 12px;
-    font-size:11px;color:var(--accent2);font-weight:500;
-    letter-spacing:0.5px;text-transform:uppercase;
-    margin-bottom:24px;
-  }
-  .hero-badge::before{content:'●';font-size:7px;}
-  .hero h1{
-    font-family:'Syne',sans-serif;font-weight:800;
-    font-size:36px;line-height:1.1;letter-spacing:-1.5px;
-    color:var(--text);margin-bottom:16px;
-  }
-  .hero h1 em{font-style:normal;color:var(--accent);}
-  .hero p{
-    font-size:15px;color:var(--text2);line-height:1.6;
-    max-width:340px;margin:0 auto 32px;font-weight:300;
-  }
-  .hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-  .btn-primary{
-    background:var(--accent);color:#fff;
-    border:none;border-radius:var(--radius2);
-    padding:12px 22px;font-size:14px;font-weight:500;
-    font-family:'DM Sans',sans-serif;cursor:pointer;
-    transition:background 0.15s,transform 0.1s;
-  }
-  .btn-primary:hover{background:var(--accent2);transform:translateY(-1px);}
-  .btn-secondary{
-    background:var(--bg3);color:var(--text);
-    border:1px solid var(--border2);border-radius:var(--radius2);
-    padding:12px 22px;font-size:14px;font-weight:500;
-    font-family:'DM Sans',sans-serif;cursor:pointer;
-    transition:background 0.15s,transform 0.1s;
-  }
-  .btn-secondary:hover{background:var(--bg4);transform:translateY(-1px);}
+  /* Borders */
+  --border-subtle:  rgba(255,255,255,0.055);
+  --border-default: rgba(255,255,255,0.09);
+  --border-strong:  rgba(255,255,255,0.14);
 
-  /* STATS BAR */
-  .stats-bar{
-    display:flex;justify-content:center;gap:0;
-    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-    background:var(--bg2);padding:0 24px;
-    flex-wrap:wrap;
-  }
-  .stat-item{
-    flex:1;min-width:100px;max-width:140px;
-    padding:16px 0;text-align:center;
-    border-right:1px solid var(--border);
-  }
-  .stat-item:last-child{border-right:none;}
-  .stat-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--text);}
-  .stat-lbl{font-size:11px;color:var(--text3);margin-top:2px;}
+  /* Text */
+  --text-primary:   #f0f0ed;
+  --text-secondary: #9a9a9f;
+  --text-tertiary:  #5a5a62;
+  --text-inverse:   #0d0e11;
 
-  /* SECTION */
-  .section{padding:48px 24px;}
-  .section-label{
-    font-size:11px;text-transform:uppercase;letter-spacing:1px;
-    color:var(--accent);font-weight:500;margin-bottom:8px;
-  }
-  .section-title{
-    font-family:'Syne',sans-serif;font-weight:700;
-    font-size:26px;letter-spacing:-0.8px;
-    color:var(--text);margin-bottom:8px;line-height:1.15;
-  }
-  .section-sub{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:28px;}
+  /* Accent — deep crimson, not aggressive red */
+  --accent:         #c44b4b;
+  --accent-soft:    #d96060;
+  --accent-muted:   rgba(196,75,75,0.12);
+  --accent-border:  rgba(196,75,75,0.25);
+  --accent-glow:    rgba(196,75,75,0.18);
 
-  /* CREATOR CARDS */
-  .creator-scroll{
-    display:flex;gap:14px;overflow-x:auto;
-    padding-bottom:8px;margin:0 -24px;padding-left:24px;padding-right:24px;
-    scrollbar-width:none;
-  }
-  .creator-scroll::-webkit-scrollbar{display:none;}
-  .creator-card{
-    flex:0 0 200px;
-    background:var(--bg2);border:1px solid var(--border);
-    border-radius:var(--radius);padding:16px;
-    transition:border-color 0.2s,transform 0.2s;cursor:pointer;
-  }
-  .creator-card:hover{border-color:var(--border2);transform:translateY(-2px);}
-  .creator-avatar{
-    width:48px;height:48px;border-radius:50%;
-    margin-bottom:12px;object-fit:cover;
-    background:var(--bg4);
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--text2);
-  }
-  .creator-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px;}
-  .creator-handle{font-size:12px;color:var(--text3);margin-bottom:10px;}
-  .platform-icons{display:flex;gap:5px;margin-bottom:10px;}
-  .platform-icon{
-    width:22px;height:22px;border-radius:5px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:10px;font-weight:700;
-  }
-  .p-tiktok{background:#1a1a2a;color:#fff;}
-  .p-youtube{background:#ff0000;color:#fff;}
-  .p-instagram{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;}
-  .p-twitter{background:#1da1f2;color:#fff;}
-  .creator-stats{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
-  .cstat{background:var(--bg3);border-radius:5px;padding:3px 8px;font-size:10px;color:var(--text2);}
-  .cstat span{color:var(--text);font-weight:500;}
-  .creator-tags{display:flex;gap:4px;flex-wrap:wrap;}
-  .tag{
-    background:var(--bg3);border:1px solid var(--border);
-    border-radius:20px;padding:2px 8px;font-size:10px;color:var(--text3);
-  }
-  .tag.accent{background:var(--accentbg);border-color:rgba(232,48,58,0.2);color:var(--accent2);}
+  /* Status */
+  --green:    #3d9e6e;
+  --green-bg: rgba(61,158,110,0.12);
+  --amber:    #c4923a;
+  --amber-bg: rgba(196,146,58,0.12);
+  --blue:     #4a7fc1;
+  --blue-bg:  rgba(74,127,193,0.12);
 
-  /* FEATURES */
-  .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-  .feature-card{
-    background:var(--bg2);border:1px solid var(--border);
-    border-radius:var(--radius);padding:16px;
-    transition:border-color 0.2s;
-  }
-  .feature-card:hover{border-color:var(--border2);}
-  .feature-icon{
-    width:36px;height:36px;border-radius:8px;
-    background:var(--accentbg);border:1px solid rgba(232,48,58,0.2);
-    display:flex;align-items:center;justify-content:center;
-    margin-bottom:10px;font-size:16px;
-  }
-  .feature-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px;}
-  .feature-desc{font-size:11px;color:var(--text3);line-height:1.5;}
+  /* Typography */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body:    'Geist', system-ui, sans-serif;
 
-  /* TESTIMONIALS */
-  .testimonials{display:flex;flex-direction:column;gap:12px;}
-  .testimonial{
-    background:var(--bg2);border:1px solid var(--border);
-    border-radius:var(--radius);padding:16px;
-  }
-  .testimonial-text{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px;font-style:italic;}
-  .testimonial-author{display:flex;align-items:center;gap:10px;}
-  .ta-avatar{
-    width:32px;height:32px;border-radius:50%;
-    background:var(--bg4);display:flex;align-items:center;
-    justify-content:center;font-size:12px;font-weight:600;color:var(--text2);
-  }
-  .ta-name{font-size:13px;font-weight:500;color:var(--text);}
-  .ta-role{font-size:11px;color:var(--text3);}
-  .stars{color:var(--accent);font-size:11px;margin-bottom:8px;}
+  /* Spacing scale */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px;
+  --s5: 20px; --s6: 24px; --s7: 32px; --s8: 48px;
+  --s9: 64px; --s10: 96px;
 
-  /* FINAL CTA */
-  .cta-section{
-    margin:0 24px 48px;
-    background:var(--bg2);border:1px solid var(--border);
-    border-radius:16px;padding:40px 24px;text-align:center;
-    position:relative;overflow:hidden;
-  }
-  .cta-section::before{
-    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
-    background:radial-gradient(ellipse at 50% 0%, rgba(232,48,58,0.08) 0%, transparent 60%);
-    pointer-events:none;
-  }
-  .cta-section h2{
-    font-family:'Syne',sans-serif;font-size:24px;font-weight:800;
-    letter-spacing:-0.8px;color:var(--text);margin-bottom:8px;
-  }
-  .cta-section p{font-size:14px;color:var(--text2);margin-bottom:24px;}
+  /* Radii */
+  --r-sm:  6px;
+  --r-md:  10px;
+  --r-lg:  14px;
+  --r-xl:  20px;
+  --r-full: 9999px;
 
-  /* DASHBOARD PAGE */
-  .dash-header{padding:20px 24px 0;border-bottom:1px solid var(--border);background:var(--bg2);}
-  .dash-header h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.5px;}
-  .dash-header p{font-size:12px;color:var(--text3);margin-top:2px;padding-bottom:16px;}
-  .dash-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
-  .dash-tab{
-    flex:0 0 auto;padding:10px 16px;font-size:13px;
-    color:var(--text3);border-bottom:2px solid transparent;
-    cursor:pointer;transition:color 0.15s;white-space:nowrap;
-    background:none;border-left:none;border-right:none;border-top:none;
-    font-family:'DM Sans',sans-serif;
-  }
-  .dash-tab.active{color:var(--text);border-bottom-color:var(--accent);}
-  .dash-body{padding:20px 24px;}
-  .metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
-  .metric-card{
-    background:var(--bg2);border:1px solid var(--border);
-    border-radius:var(--radius);padding:14px;
-  }
-  .metric-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
-  .metric-value{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text);}
-  .metric-delta{font-size:11px;margin-top:2px;}
-  .delta-up{color:#4caf50;} .delta-down{color:var(--accent);}
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4), 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3);
+  --shadow-lg:  0 12px 40px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-glow: 0 0 40px rgba(196,75,75,0.15), 0 0 80px rgba(196,75,75,0.07);
 
-  .campaign-list{display:flex;flex-direction:column;gap:10px;}
-  .campaign-item{
-    background:var(--bg2);border:1px solid var(--border);
-    border-radius:var(--radius);padding:14px;
-    display:flex;align-items:center;justify-content:space-between;
-    gap:12px;
-  }
-  .camp-info{flex:1;min-width:0;}
-  .camp-name{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .camp-meta{font-size:11px;color:var(--text3);margin-top:2px;}
-  .status-badge{
-    flex:0 0 auto;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:500;
-  }
-  .status-active{background:#4caf5020;color:#4caf50;}
-  .status-pending{background:#ff980020;color:#ff9800;}
-  .status-draft{background:var(--bg3);color:var(--text3);}
-  .progress-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:6px;overflow:hidden;}
-  .progress-fill{height:100%;background:var(--accent);border-radius:2px;}
+  /* Layout */
+  --container: 1120px;
+  --nav-h: 60px;
 
-  /* CREATOR PROFILE PAGE */
-  .profile-header{
-    background:var(--bg2);border-bottom:1px solid var(--border);
-    padding:24px;text-align:center;
-  }
-  .profile-avatar-lg{
-    width:72px;height:72px;border-radius:50%;
-    background:var(--bg4);border:2px solid var(--border2);
-    margin:0 auto 12px;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--text2);
-  }
-  .profile-name{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:3px;}
-  .profile-handle{font-size:13px;color:var(--text3);margin-bottom:12px;}
-  .profile-tags{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
-  .profile-cta{display:flex;gap:8px;justify-content:center;}
-  .profile-stats{
-    display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-    background:var(--bg);
-  }
-  .profile-stat{flex:1;text-align:center;padding:14px 0;border-right:1px solid var(--border);}
-  .profile-stat:last-child{border-right:none;}
-  .profile-stat-val{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);}
-  .profile-stat-lbl{font-size:10px;color:var(--text3);margin-top:2px;}
-  .profile-section{padding:20px 24px;border-bottom:1px solid var(--border);}
-  .profile-section-title{font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:12px;}
-  .media-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
-  .media-thumb{
-    aspect-ratio:1;background:var(--bg3);border-radius:6px;
-    display:flex;align-items:center;justify-content:center;
-    font-size:10px;color:var(--text3);border:1px solid var(--border);
-    flex-direction:column;gap:4px;
-  }
-  .media-thumb .views{font-size:9px;color:var(--text3);}
+  /* Transitions */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 120ms;
+  --t-med:  200ms;
+  --t-slow: 350ms;
+}
 
-  /* DISCOVERY PAGE */
-  .discovery-filters{
-    padding:16px 24px;background:var(--bg2);border-bottom:1px solid var(--border);
-  }
-  .filter-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
-  .filter-chip{
-    flex:0 0 auto;background:var(--bg3);border:1px solid var(--border);
-    border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text2);
-    cursor:pointer;transition:all 0.15s;white-space:nowrap;
-    font-family:'DM Sans',sans-serif;
-  }
-  .filter-chip.active{background:var(--accentbg);border-color:rgba(232,48,58,0.3);color:var(--accent2);}
-  .filter-chip:hover{border-color:var(--border2);color:var(--text);}
-  .search-box{
-    display:flex;align-items:center;gap:10px;
-    background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);
-    padding:10px 14px;margin-bottom:12px;
-  }
-  .search-box input{
-    background:none;border:none;outline:none;
-    font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;
-    flex:1;
-  }
-  .search-box input::placeholder{color:var(--text3);}
-  .discovery-grid{
-    padding:16px 24px;
-    display:grid;grid-template-columns:1fr 1fr;gap:12px;
-  }
-  .disco-card{
-    background:var(--bg2);border:1px solid var(--border);
-    border-radius:var(--radius);padding:14px;
-    transition:border-color 0.2s,transform 0.15s;cursor:pointer;
-  }
-  .disco-card:hover{border-color:var(--border2);transform:translateY(-1px);}
-  .disco-avatar{
-    width:40px;height:40px;border-radius:50%;
-    background:var(--bg4);margin-bottom:8px;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--text2);
-  }
-  .disco-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:1px;}
-  .disco-handle{font-size:10px;color:var(--text3);margin-bottom:8px;}
-  .disco-stats{display:flex;flex-direction:column;gap:3px;margin-bottom:8px;}
-  .disco-stat{font-size:10px;color:var(--text3);}
-  .disco-stat span{color:var(--text);font-weight:500;}
+/* ─── BASE ───────────────────────────────────── */
+body{
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
 
-  /* AUTH PAGE */
-  .auth-page{min-height:100vh;background:var(--bg);display:flex;flex-direction:column;}
-  .auth-body{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;}
-  .auth-card{
-    background:var(--bg2);border:1px solid var(--border);
-    border-radius:16px;padding:28px 24px;width:100%;max-width:360px;
-  }
-  .auth-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--text);margin-bottom:4px;}
-  .auth-logo span{color:var(--accent);}
-  .auth-sub{font-size:13px;color:var(--text3);margin-bottom:24px;}
-  .role-selector{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
-  .role-opt{
-    background:var(--bg3);border:1px solid var(--border);
-    border-radius:var(--radius);padding:12px;text-align:center;
-    cursor:pointer;transition:all 0.15s;
-  }
-  .role-opt.active{background:var(--accentbg);border-color:rgba(232,48,58,0.35);}
-  .role-icon{font-size:22px;margin-bottom:4px;}
-  .role-name{font-size:12px;font-weight:500;color:var(--text);}
-  .role-desc{font-size:10px;color:var(--text3);margin-top:2px;}
-  .form-group{margin-bottom:14px;}
-  .form-label{font-size:12px;color:var(--text2);margin-bottom:5px;display:block;}
-  .form-input{
-    width:100%;background:var(--bg3);border:1px solid var(--border);
-    border-radius:var(--radius2);padding:10px 14px;
-    font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;
-    outline:none;transition:border-color 0.15s;
-  }
-  .form-input:focus{border-color:var(--accent);}
-  .form-input::placeholder{color:var(--text3);}
-  .divider{
-    display:flex;align-items:center;gap:10px;margin:16px 0;
-    font-size:11px;color:var(--text3);
-  }
-  .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
-  .social-btn{
-    width:100%;background:var(--bg3);border:1px solid var(--border);
-    border-radius:var(--radius2);padding:10px;font-size:13px;
-    color:var(--text2);font-family:'DM Sans',sans-serif;cursor:pointer;
-    transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;
-  }
-  .social-btn:hover{background:var(--bg4);}
-  .auth-footer{font-size:12px;color:var(--text3);text-align:center;margin-top:16px;}
-  .auth-footer a{color:var(--accent2);text-decoration:none;}
+/* ─── LAYOUT ─────────────────────────────────── */
+.container{
+  width: 100%;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--s6);
+}
 
-  /* BOTTOM NAV */
-  .bottom-nav{
-    position:sticky;bottom:0;background:rgba(10,10,12,0.95);
-    backdrop-filter:blur(16px);border-top:1px solid var(--border);
-    display:flex;height:56px;
-  }
-  .bottom-nav-item{
-    flex:1;display:flex;flex-direction:column;align-items:center;
-    justify-content:center;gap:2px;cursor:pointer;
-    border:none;background:none;transition:all 0.15s;
-    font-family:'DM Sans',sans-serif;
-  }
-  .bottom-nav-item .bni{font-size:18px;}
-  .bottom-nav-item .bnl{font-size:9px;color:var(--text3);}
-  .bottom-nav-item.active .bni{color:var(--accent);}
-  .bottom-nav-item.active .bnl{color:var(--accent);}
-  .bottom-nav-item:not(.active) .bni{color:var(--text3);}
+/* ─── PAGE SYSTEM ────────────────────────────── */
+.page{ display:none; min-height:100vh; }
+.page.active{ display:block; }
 
-  /* INBOX */
-  .inbox-list{padding:0 24px;display:flex;flex-direction:column;gap:0;}
-  .inbox-item{
-    display:flex;align-items:center;gap:12px;
-    padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;
-    transition:background 0.1s;
-  }
-  .inbox-avatar{
-    width:40px;height:40px;border-radius:50%;flex:0 0 40px;
-    background:var(--bg3);display:flex;align-items:center;
-    justify-content:center;font-size:13px;font-weight:600;color:var(--text2);
-  }
-  .inbox-content{flex:1;min-width:0;}
-  .inbox-name{font-size:13px;font-weight:500;color:var(--text);}
-  .inbox-preview{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .inbox-meta{font-size:10px;color:var(--text3);flex:0 0 auto;text-align:right;}
-  .unread-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin:3px 0 0 auto;}
+/* ─── NAVBAR ─────────────────────────────────── */
+.nav{
+  height: var(--nav-h);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(13,14,17,0.82);
+  backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.nav-inner{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo{
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+.nav-logo .dot{
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+}
+.nav-center{
+  display: flex;
+  align-items: center;
+  gap: var(--s1);
+}
+.nav-link{
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  font-weight: 400;
+  padding: var(--s2) var(--s3);
+  border-radius: var(--r-sm);
+  transition: color var(--t-fast), background var(--t-fast);
+}
+.nav-link:hover{ color: var(--text-primary); background: var(--bg-float); }
+.nav-right{
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+.btn-ghost{
+  background: none;
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px var(--s4);
+  border-radius: var(--r-sm);
+  transition: all var(--t-fast);
+}
+.btn-ghost:hover{ border-color: var(--border-strong); color: var(--text-primary); background: var(--bg-float); }
+.btn-accent{
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px var(--s4);
+  border-radius: var(--r-sm);
+  transition: background var(--t-fast), transform var(--t-fast);
+}
+.btn-accent:hover{ background: var(--accent-soft); transform: translateY(-1px); }
+
+/* ─── BOTTOM NAV (mobile) ────────────────────── */
+.bottom-nav{
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: rgba(13,14,17,0.96);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  z-index: 199;
+}
+.bnav-item{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  transition: color var(--t-fast);
+}
+.bnav-item.active{ color: var(--accent); }
+.bnav-item svg{ width: 18px; height: 18px; stroke-width: 1.8; }
+
+/* ─── TYPOGRAPHY ─────────────────────────────── */
+.display-xl{
+  font-family: var(--font-display);
+  font-size: clamp(38px, 8vw, 62px);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+.display-xl em{ font-style: italic; color: var(--accent-soft); }
+.display-lg{
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+.heading-md{
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.heading-sm{
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+.label{
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+}
+.label-accent{
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent-soft);
+}
+.body-lg{ font-size: 16px; line-height: 1.65; color: var(--text-secondary); font-weight: 300; }
+.body-sm{ font-size: 13px; line-height: 1.6; color: var(--text-secondary); }
+
+/* ─── CARDS ──────────────────────────────────── */
+.card{
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+}
+.card-float{
+  background: var(--bg-float);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-lg);
+}
+.card-interactive{
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-lg);
+  transition: border-color var(--t-med), transform var(--t-med), box-shadow var(--t-med);
+}
+.card-interactive:hover{
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ─── BADGES ─────────────────────────────────── */
+.badge{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: 500;
+}
+.badge-green{ background: var(--green-bg); color: var(--green); }
+.badge-amber{ background: var(--amber-bg); color: var(--amber); }
+.badge-blue{  background: var(--blue-bg);  color: var(--blue);  }
+.badge-dim{   background: var(--bg-overlay); color: var(--text-tertiary); }
+.badge-accent{ background: var(--accent-muted); color: var(--accent-soft); border: 1px solid var(--accent-border); }
+
+/* ─── DIVIDER ────────────────────────────────── */
+.divider{ height: 1px; background: var(--border-subtle); }
+
+/* ─── PLATFORM CHIPS ─────────────────────────── */
+.platform-chip{
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: var(--r-sm);
+  font-size: 11px;
+  font-weight: 500;
+  background: var(--bg-overlay);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ─── STAT PILL ──────────────────────────────── */
+.stat-pill{
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.stat-pill .val{
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  line-height: 1;
+}
+.stat-pill .lbl{
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+/* ─── PROGRESS ───────────────────────────────── */
+.progress-track{
+  height: 3px;
+  background: var(--bg-overlay);
+  border-radius: var(--r-full);
+  overflow: hidden;
+}
+.progress-fill{
+  height: 100%;
+  border-radius: var(--r-full);
+  background: var(--accent);
+  transition: width 1s var(--ease);
+}
+.progress-fill.green{ background: var(--green); }
+.progress-fill.blue{  background: var(--blue);  }
+
+/* ─── TAG ────────────────────────────────────── */
+.tag{
+  display: inline-flex;
+  padding: 2px 9px;
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: 400;
+  background: var(--bg-overlay);
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+
+/* ─── FORM ───────────────────────────────────── */
+.form-field{ display: flex; flex-direction: column; gap: 6px; }
+.form-label{ font-size: 12px; font-weight: 500; color: var(--text-secondary); }
+.form-input{
+  width: 100%;
+  background: var(--bg-float);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-md);
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--t-fast);
+}
+.form-input:focus{ border-color: var(--accent); }
+.form-input::placeholder{ color: var(--text-tertiary); }
+
+/* ─── AVATAR ─────────────────────────────────── */
+.avatar{
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  flex-shrink: 0;
+  background: var(--bg-overlay);
+  color: var(--text-secondary);
+  overflow: hidden;
+}
+.avatar-sm{ width: 32px; height: 32px; font-size: 12px; }
+.avatar-md{ width: 44px; height: 44px; font-size: 16px; }
+.avatar-lg{ width: 64px; height: 64px; font-size: 22px; border: 2px solid var(--border-default); }
+.avatar-xl{ width: 80px; height: 80px; font-size: 28px; border: 2px solid var(--border-default); }
+
+/* ─── SCROLLABLE ROW ─────────────────────────── */
+.scroll-row{
+  display: flex;
+  gap: var(--s4);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+}
+.scroll-row::-webkit-scrollbar{ display: none; }
+
+/* ═══════════════════════════════════════════════
+   PAGE: LANDING
+═══════════════════════════════════════════════ */
+#page-landing{ padding-bottom: 80px; }
+
+/* Hero */
+.hero{
+  padding: var(--s10) 0 var(--s8);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before{
+  content: '';
+  position: absolute;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 500px;
+  background: radial-gradient(ellipse at center, rgba(196,75,75,0.08) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-eyebrow{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: var(--r-full);
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: var(--s6);
+}
+.hero-eyebrow .live-dot{
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  animation: pulse 2.4s ease infinite;
+}
+@keyframes pulse{
+  0%,100%{ opacity:1; transform:scale(1); }
+  50%{ opacity:0.6; transform:scale(0.85); }
+}
+.hero-title{ margin-bottom: var(--s5); }
+.hero-sub{
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  font-weight: 300;
+  max-width: 520px;
+  margin: 0 auto var(--s7);
+}
+.hero-actions{
+  display: flex;
+  gap: var(--s3);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--s8);
+}
+.btn-lg{
+  font-size: 14px;
+  font-weight: 500;
+  padding: 11px 24px;
+  border-radius: var(--r-md);
+  transition: all var(--t-med) var(--ease);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.btn-lg.primary{
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  box-shadow: 0 0 0 1px rgba(196,75,75,0.4), var(--shadow-glow);
+}
+.btn-lg.primary:hover{ background: var(--accent-soft); transform: translateY(-1px); }
+.btn-lg.outline{
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+}
+.btn-lg.outline:hover{ background: var(--bg-float); transform: translateY(-1px); }
+.hero-social-proof{
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s3);
+}
+.proof-faces{
+  display: flex;
+}
+.proof-faces span{
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--bg-base);
+  background: var(--bg-overlay);
+  margin-right: -6px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Stats Row */
+.stats-row{
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--s7) 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+.stats-row .stat-item{
+  text-align: center;
+  padding: 0 var(--s6);
+  border-right: 1px solid var(--border-subtle);
+}
+.stats-row .stat-item:last-child{ border-right: none; }
+.stats-row .stat-val{
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  display: block;
+}
+.stats-row .stat-lbl{
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 3px;
+}
+
+/* Section spacing */
+.section{
+  padding: var(--s9) 0;
+  border-top: 1px solid var(--border-subtle);
+}
+.section-header{
+  margin-bottom: var(--s8);
+}
+
+/* Creator Cards */
+.creator-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--s4);
+}
+.creator-card{
+  padding: var(--s5);
+  cursor: pointer;
+}
+.creator-card-top{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--s4);
+}
+.creator-card-info{ margin-bottom: var(--s4); }
+.creator-card-info .name{
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  letter-spacing: -0.2px;
+}
+.creator-card-info .handle{
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+.creator-card-stats{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s2) var(--s4);
+  padding: var(--s4) 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--s4);
+}
+.creator-card-stat .val{
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+.creator-card-stat .lbl{
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+}
+.creator-platforms{
+  display: flex;
+  gap: var(--s2);
+  flex-wrap: wrap;
+}
+
+/* Features */
+.features-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--s4);
+}
+.feature-card{
+  padding: var(--s6);
+}
+.feature-icon-wrap{
+  width: 40px; height: 40px;
+  border-radius: var(--r-md);
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--s5);
+  color: var(--accent-soft);
+}
+.feature-icon-wrap svg{ width: 18px; height: 18px; stroke-width: 1.8; }
+
+/* Testimonials */
+.testimonials-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--s4);
+}
+.testimonial-card{ padding: var(--s6); }
+.testimonial-text{
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: var(--s5);
+  font-style: italic;
+  font-family: var(--font-display);
+}
+.testimonial-author{
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+}
+
+/* CTA Block */
+.cta-block{
+  padding: var(--s9) var(--s8);
+  text-align: center;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-xl);
+  position: relative;
+  overflow: hidden;
+  margin: var(--s8) 0;
+}
+.cta-block::before{
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 300px;
+  background: radial-gradient(ellipse at top, rgba(196,75,75,0.1) 0%, transparent 60%);
+  pointer-events: none;
+}
+.cta-block .cta-title{
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 42px);
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: var(--s4);
+}
+.cta-block .cta-sub{ margin-bottom: var(--s7); max-width: 440px; margin-left: auto; margin-right: auto; }
+
+/* ═══════════════════════════════════════════════
+   PAGE: DASHBOARD
+═══════════════════════════════════════════════ */
+#page-dashboard{ padding-bottom: 80px; }
+
+.dash-layout{
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: calc(100vh - var(--nav-h));
+}
+@media(max-width:768px){
+  .dash-layout{ grid-template-columns: 1fr; }
+  .dash-sidebar{ display: none; }
+}
+.dash-sidebar{
+  border-right: 1px solid var(--border-subtle);
+  padding: var(--s6) var(--s4);
+  position: sticky;
+  top: var(--nav-h);
+  height: calc(100vh - var(--nav-h));
+  overflow-y: auto;
+}
+.sidebar-section-label{
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-tertiary);
+  padding: var(--s2) var(--s3);
+  margin-bottom: var(--s2);
+}
+.sidebar-item{
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: 8px var(--s3);
+  border-radius: var(--r-sm);
+  font-size: 13.5px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  margin-bottom: 1px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+.sidebar-item:hover{ background: var(--bg-float); color: var(--text-primary); }
+.sidebar-item.active{
+  background: var(--bg-overlay);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.sidebar-item svg{ width: 15px; height: 15px; stroke-width: 1.8; flex-shrink: 0; }
+.sidebar-badge{
+  margin-left: auto;
+  font-size: 10px;
+  background: var(--accent-muted);
+  color: var(--accent-soft);
+  padding: 1px 6px;
+  border-radius: var(--r-full);
+}
+.sidebar-workspace{
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3);
+  border-radius: var(--r-md);
+  background: var(--bg-float);
+  border: 1px solid var(--border-subtle);
+  margin-bottom: var(--s6);
+  cursor: pointer;
+}
+.ws-avatar{
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  background: var(--accent-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-soft);
+}
+.ws-name{ font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.ws-plan{ font-size: 10px; color: var(--text-tertiary); }
+
+.dash-main{
+  padding: var(--s7) var(--s7);
+  overflow-y: auto;
+}
+.dash-main-mobile{
+  padding: var(--s5) var(--s5);
+}
+.page-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--s7);
+  flex-wrap: wrap;
+  gap: var(--s4);
+}
+.page-header-left .page-title{
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.page-header-left .page-sub{
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+/* Metric Cards */
+.metrics-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: var(--s4);
+  margin-bottom: var(--s7);
+}
+.metric-card{ padding: var(--s5); }
+.metric-card .metric-label{
+  font-size: 11.5px;
+  color: var(--text-tertiary);
+  margin-bottom: var(--s3);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.metric-card .metric-label svg{ width: 13px; height: 13px; }
+.metric-card .metric-value{
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.8px;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: var(--s2);
+}
+.metric-card .metric-change{
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.change-up{ color: var(--green); }
+.change-dn{ color: var(--accent); }
+.change-neu{ color: var(--text-tertiary); }
+
+/* Chart Placeholder */
+.chart-area{
+  height: 160px;
+  position: relative;
+  margin-top: var(--s4);
+}
+.chart-bars{
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  height: 100%;
+  padding: 0 var(--s4);
+}
+.chart-bar{
+  flex: 1;
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  background: var(--bg-overlay);
+  position: relative;
+  min-height: 8px;
+  transition: background var(--t-fast);
+  cursor: pointer;
+}
+.chart-bar:hover{ background: var(--bg-hover); }
+.chart-bar.active{ background: var(--accent); opacity: 0.7; }
+.chart-bar.highlight{ background: var(--accent); }
+
+/* Campaigns */
+.section-card{ padding: var(--s6); margin-bottom: var(--s4); }
+.section-card-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--s5);
+}
+.section-card-header .title{
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+.section-card-header .action{
+  font-size: 12px;
+  color: var(--text-tertiary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color var(--t-fast);
+}
+.section-card-header .action:hover{ color: var(--text-primary); }
+
+.campaign-row{
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  padding: var(--s4) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.campaign-row:last-child{ border-bottom: none; padding-bottom: 0; }
+.campaign-row:first-child{ padding-top: 0; }
+.campaign-info{ flex: 1; min-width: 0; }
+.campaign-name{
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.campaign-meta{ font-size: 11px; color: var(--text-tertiary); margin-bottom: var(--s2); }
+.campaign-right{ flex-shrink: 0; text-align: right; }
+.campaign-value{
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+/* Inbox */
+.inbox-row{
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  padding: var(--s4) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.inbox-row:last-child{ border-bottom: none; }
+.inbox-row:hover{ margin: 0 calc(-1 * var(--s6)); padding-left: var(--s6); padding-right: var(--s6); background: var(--bg-float); }
+.inbox-body{ flex: 1; min-width: 0; }
+.inbox-name{ font-size: 13.5px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
+.inbox-preview{ font-size: 12px; color: var(--text-tertiary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.inbox-time{ font-size: 11px; color: var(--text-tertiary); flex-shrink: 0; }
+.unread-dot{ width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════
+   PAGE: PROFILE
+═══════════════════════════════════════════════ */
+#page-profile{ padding-bottom: 80px; }
+
+.profile-hero{
+  background: var(--bg-raised);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--s8) 0 0;
+}
+.profile-hero-inner{
+  display: flex;
+  align-items: flex-start;
+  gap: var(--s6);
+  padding-bottom: var(--s6);
+}
+.profile-info{ flex: 1; min-width: 0; }
+.profile-name-row{
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  margin-bottom: var(--s1);
+  flex-wrap: wrap;
+}
+.profile-name{
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+.verified-icon{ color: var(--blue); }
+.profile-handle{ font-size: 14px; color: var(--text-tertiary); margin-bottom: var(--s4); }
+.profile-bio{ font-size: 14px; color: var(--text-secondary); line-height: 1.65; margin-bottom: var(--s5); max-width: 480px; }
+.profile-actions{ display: flex; gap: var(--s3); flex-wrap: wrap; }
+.btn-md{
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: var(--r-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--t-fast);
+}
+.btn-md.primary{
+  background: var(--accent);
+  border: none;
+  color: #fff;
+}
+.btn-md.primary:hover{ background: var(--accent-soft); }
+.btn-md.outline{
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+}
+.btn-md.outline:hover{ background: var(--bg-float); }
+
+.profile-stats-bar{
+  display: flex;
+  border-top: 1px solid var(--border-subtle);
+}
+.profile-stat-item{
+  flex: 1;
+  padding: var(--s5) 0;
+  text-align: center;
+  border-right: 1px solid var(--border-subtle);
+}
+.profile-stat-item:last-child{ border-right: none; }
+.profile-stat-val{
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+}
+.profile-stat-lbl{
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.profile-body{ padding: var(--s7) 0; }
+.profile-grid{
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--s6);
+}
+@media(max-width: 768px){
+  .profile-grid{ grid-template-columns: 1fr; }
+  .profile-hero-inner{ flex-direction: column; gap: var(--s4); }
+}
+
+.media-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s2);
+}
+.media-item{
+  aspect-ratio: 1;
+  background: var(--bg-overlay);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: border-color var(--t-fast);
+  overflow: hidden;
+  position: relative;
+}
+.media-item:hover{ border-color: var(--border-strong); }
+.media-item .views{
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════════════
+   PAGE: DISCOVERY
+═══════════════════════════════════════════════ */
+#page-discovery{ padding-bottom: 80px; }
+
+.discovery-toolbar{
+  padding: var(--s5) 0;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-base);
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 100;
+}
+.search-input-wrap{
+  position: relative;
+  margin-bottom: var(--s4);
+}
+.search-input-wrap svg{
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px;
+  height: 15px;
+  color: var(--text-tertiary);
+  stroke-width: 2;
+  pointer-events: none;
+}
+.search-input-wrap input{
+  width: 100%;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-default);
+  border-radius: var(--r-md);
+  padding: 10px 14px 10px 40px;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color var(--t-fast);
+}
+.search-input-wrap input:focus{ border-color: var(--border-strong); }
+.search-input-wrap input::placeholder{ color: var(--text-tertiary); }
+.filter-pills{
+  display: flex;
+  gap: var(--s2);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-pills::-webkit-scrollbar{ display: none; }
+.filter-pill{
+  flex-shrink: 0;
+  padding: 6px 14px;
+  border-radius: var(--r-full);
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  white-space: nowrap;
+}
+.filter-pill:hover{ border-color: var(--border-strong); color: var(--text-primary); }
+.filter-pill.active{
+  background: var(--accent-muted);
+  border-color: var(--accent-border);
+  color: var(--accent-soft);
+}
+
+.discovery-grid{
+  padding: var(--s6) 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--s4);
+}
+.disco-card{
+  padding: var(--s5);
+  cursor: pointer;
+}
+.disco-card-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--s4);
+}
+.disco-card-name{
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+  letter-spacing: -0.2px;
+}
+.disco-card-handle{
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.disco-card-stats{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s3);
+  padding-top: var(--s4);
+  border-top: 1px solid var(--border-subtle);
+  margin-bottom: var(--s4);
+}
+.disco-stat-val{
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+.disco-stat-lbl{
+  font-size: 10px;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+}
+
+/* ═══════════════════════════════════════════════
+   PAGE: AUTH
+═══════════════════════════════════════════════ */
+#page-auth{
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s8) var(--s6) calc(var(--s8) + 80px);
+  background: var(--bg-base);
+}
+.auth-wrap{
+  width: 100%;
+  max-width: 420px;
+}
+.auth-logo{
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s7);
+}
+.auth-card{
+  padding: var(--s7) var(--s7);
+  margin-bottom: var(--s5);
+}
+.auth-title{
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: var(--text-primary);
+  margin-bottom: var(--s2);
+}
+.auth-sub{ font-size: 14px; color: var(--text-secondary); margin-bottom: var(--s6); }
+.role-grid{ display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); margin-bottom: var(--s6); }
+.role-option{
+  padding: var(--s4) var(--s4);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border-default);
+  background: var(--bg-float);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  text-align: left;
+}
+.role-option:hover{ border-color: var(--border-strong); }
+.role-option.active{ border-color: var(--accent-border); background: var(--accent-muted); }
+.role-option .role-icon{ font-size: 20px; margin-bottom: var(--s2); display: block; }
+.role-option .role-name{ font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 2px; }
+.role-option .role-desc{ font-size: 11px; color: var(--text-tertiary); }
+.form-stack{ display: flex; flex-direction: column; gap: var(--s4); margin-bottom: var(--s5); }
+.auth-divider{
+  display: flex;
+  align-items: center;
+  gap: var(--s4);
+  margin: var(--s5) 0;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.auth-divider::before,.auth-divider::after{
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+.social-btn{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 10px;
+  border-radius: var(--r-md);
+  background: var(--bg-float);
+  border: 1px solid var(--border-default);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.social-btn:hover{ border-color: var(--border-strong); background: var(--bg-overlay); }
+.auth-footer-text{
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--text-tertiary);
+}
+.auth-footer-text a{ color: var(--accent-soft); }
+.btn-full{
+  width: 100%;
+  padding: 11px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--r-md);
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  transition: background var(--t-fast);
+}
+.btn-full:hover{ background: var(--accent-soft); }
+
+/* ─── UTILITY ────────────────────────────────── */
+.mt-4{ margin-top: var(--s4); }
+.mt-5{ margin-top: var(--s5); }
+.mt-6{ margin-top: var(--s6); }
+.mt-7{ margin-top: var(--s7); }
+.mb-4{ margin-bottom: var(--s4); }
+.mb-5{ margin-bottom: var(--s5); }
+.mb-6{ margin-bottom: var(--s6); }
+.flex{ display: flex; }
+.items-center{ align-items: center; }
+.gap-2{ gap: var(--s2); }
+.gap-3{ gap: var(--s3); }
+.gap-4{ gap: var(--s4); }
+.justify-between{ justify-content: space-between; }
+.flex-wrap{ flex-wrap: wrap; }
+
+@media(max-width:640px){
+  .stats-row{ grid-template-columns: repeat(2,1fr); }
+  .stats-row .stat-item:nth-child(2){ border-right: none; }
+  .stats-row .stat-item:nth-child(3),
+  .stats-row .stat-item:nth-child(4){ border-top: 1px solid var(--border-subtle); }
+  .hero-sub{ font-size: 15px; }
+  .creator-grid{ grid-template-columns: 1fr 1fr; }
+  .features-grid{ grid-template-columns: 1fr; }
+  .testimonials-grid{ grid-template-columns: 1fr; }
+  .cta-block{ padding: var(--s7) var(--s6); }
+  .metrics-grid{ grid-template-columns: 1fr 1fr; }
+  .discovery-grid{ grid-template-columns: 1fr 1fr; }
+  .auth-card{ padding: var(--s6) var(--s5); }
+}
 </style>
+</head>
+<body>
 
-<h2 class="sr-only">Strivio — creator and sponsor platform prototype with landing page, dashboard, creator profile, discovery, and login pages</h2>
-
-<div class="app" id="app">
-
-<!-- PAGE: LANDING -->
-<div class="page active" id="page-landing">
+<!-- ════════════ PAGE: LANDING ════════════ -->
+<div id="page-landing" class="page active">
   <nav class="nav">
-    <div class="logo">Striv<span>io</span></div>
-    <div class="nav-links">
-      <button class="nav-btn" onclick="showPage('discovery')">Browse</button>
-      <button class="nav-btn" onclick="showPage('dashboard')">Dashboard</button>
-      <button class="nav-btn primary" onclick="showPage('auth')">Sign up</button>
+    <div class="container">
+      <div class="nav-inner">
+        <div class="nav-logo" onclick="nav('landing')" style="cursor:pointer;">
+          <span class="dot"></span>Strivio
+        </div>
+        <div class="nav-center">
+          <button class="nav-link" onclick="nav('discovery')">Browse</button>
+          <button class="nav-link" onclick="nav('dashboard')">For Brands</button>
+          <button class="nav-link">Pricing</button>
+        </div>
+        <div class="nav-right">
+          <button class="btn-ghost" onclick="nav('auth')">Sign in</button>
+          <button class="btn-accent" onclick="nav('auth')">Get started</button>
+        </div>
+      </div>
     </div>
   </nav>
 
+  <!-- Hero -->
   <div class="hero">
-    <div class="hero-badge">Now in Beta</div>
-    <h1>Where creators and<br><em>sponsors connect.</em></h1>
-    <p>Strivio helps creators land sponsorships and helps brands discover the right talent — faster than ever.</p>
-    <div class="hero-btns">
-      <button class="btn-primary" onclick="showPage('auth')">Find Sponsors →</button>
-      <button class="btn-secondary" onclick="showPage('dashboard')">Hire Creators</button>
+    <div class="container" style="max-width:760px;">
+      <div class="hero-eyebrow">
+        <span class="live-dot"></span>
+        Now in early access — 24,000+ creators
+      </div>
+      <div class="hero-title">
+        <h1 class="display-xl">
+          The platform where<br><em>creators get paid</em><br>to do what they love.
+        </h1>
+      </div>
+      <p class="hero-sub">
+        Strivio connects content creators with the brands that need them most.
+        Smarter matching. Transparent deals. No middlemen.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-lg primary" onclick="nav('auth')">
+          Start for free
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <button class="btn-lg outline" onclick="nav('discovery')">Browse creators</button>
+      </div>
+      <div class="hero-social-proof">
+        <div class="proof-faces">
+          <span>😊</span><span>😄</span><span>🙂</span><span>😎</span>
+        </div>
+        <span>Trusted by 1,200+ brands including Razer, Notion, and NordVPN</span>
+      </div>
     </div>
   </div>
 
-  <div class="stats-bar">
-    <div class="stat-item"><div class="stat-val">24K+</div><div class="stat-lbl">Creators</div></div>
-    <div class="stat-item"><div class="stat-val">1.2K</div><div class="stat-lbl">Brands</div></div>
-    <div class="stat-item"><div class="stat-val">$8.4M</div><div class="stat-lbl">Paid out</div></div>
-    <div class="stat-item"><div class="stat-val">94%</div><div class="stat-lbl">Match rate</div></div>
+  <!-- Stats -->
+  <div class="stats-row" style="border-left:none;border-right:none;">
+    <div class="container" style="padding:0;">
+      <div class="stats-row" style="border:none;padding:0;">
+        <div class="stat-item">
+          <span class="stat-val">24K+</span>
+          <div class="stat-lbl">Active creators</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val">1,240</span>
+          <div class="stat-lbl">Brand partners</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val">$8.4M</span>
+          <div class="stat-lbl">Creator earnings</div>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val">94%</span>
+          <div class="stat-lbl">Deal close rate</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- CREATOR SHOWCASE -->
+  <!-- Creators -->
   <div class="section">
-    <div class="section-label">Top Creators</div>
-    <div class="section-title">Discover talent</div>
-    <div class="section-sub">Browse verified creators across every niche.</div>
-    <div class="creator-scroll">
+    <div class="container">
+      <div class="section-header">
+        <p class="label-accent" style="margin-bottom:10px;">Creator Marketplace</p>
+        <h2 class="display-lg" style="margin-bottom:12px;">Find your next partner.</h2>
+        <p class="body-lg" style="max-width:460px;">Browse thousands of vetted creators across every niche, platform, and audience size.</p>
+      </div>
+      <div class="creator-grid">
 
-      <div class="creator-card" onclick="showPage('profile')">
-        <div class="creator-avatar" style="background:linear-gradient(135deg,#1a1a3a,#2a1a4a);">🎮</div>
-        <div class="creator-name">Alex Rivera</div>
-        <div class="creator-handle">@alexplays</div>
-        <div class="platform-icons">
-          <div class="platform-icon p-tiktok">TT</div>
-          <div class="platform-icon p-youtube">YT</div>
-          <div class="platform-icon p-twitter">TW</div>
+        <div class="card-interactive creator-card" onclick="nav('profile')">
+          <div class="creator-card-top">
+            <div class="avatar avatar-md" style="background:linear-gradient(135deg,#1e1a2a,#2a1e3a);font-size:20px;">🎮</div>
+            <div class="badge badge-green">
+              <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
+              Open
+            </div>
+          </div>
+          <div class="creator-card-info">
+            <div class="name">Alex Rivera</div>
+            <div class="handle">@alexplays</div>
+          </div>
+          <div class="creator-card-stats">
+            <div class="creator-card-stat"><div class="val">2.4M</div><div class="lbl">Followers</div></div>
+            <div class="creator-card-stat"><div class="val">8.2%</div><div class="lbl">Eng. rate</div></div>
+            <div class="creator-card-stat"><div class="val">$4,200</div><div class="lbl">Avg. deal</div></div>
+            <div class="creator-card-stat"><div class="val">42</div><div class="lbl">Completed</div></div>
+          </div>
+          <div class="creator-platforms">
+            <span class="platform-chip">TikTok</span>
+            <span class="platform-chip">YouTube</span>
+            <span class="tag">Gaming</span>
+            <span class="tag">Tech</span>
+          </div>
         </div>
-        <div class="creator-stats">
-          <div class="cstat"><span>2.4M</span> followers</div>
-          <div class="cstat"><span>8.2%</span> ER</div>
-        </div>
-        <div class="creator-tags">
-          <div class="tag accent">Gaming</div>
-          <div class="tag">Tech</div>
-        </div>
-      </div>
 
-      <div class="creator-card" onclick="showPage('profile')">
-        <div class="creator-avatar" style="background:linear-gradient(135deg,#3a1a1a,#4a2a1a);">💪</div>
-        <div class="creator-name">Maya Chen</div>
-        <div class="creator-handle">@mayafit</div>
-        <div class="platform-icons">
-          <div class="platform-icon p-instagram">IG</div>
-          <div class="platform-icon p-youtube">YT</div>
+        <div class="card-interactive creator-card" onclick="nav('profile')">
+          <div class="creator-card-top">
+            <div class="avatar avatar-md" style="background:linear-gradient(135deg,#1e2a1e,#2a3a1e);font-size:20px;">💪</div>
+            <div class="badge badge-green">
+              <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
+              Open
+            </div>
+          </div>
+          <div class="creator-card-info">
+            <div class="name">Maya Chen</div>
+            <div class="handle">@mayafit</div>
+          </div>
+          <div class="creator-card-stats">
+            <div class="creator-card-stat"><div class="val">890K</div><div class="lbl">Followers</div></div>
+            <div class="creator-card-stat"><div class="val">11.4%</div><div class="lbl">Eng. rate</div></div>
+            <div class="creator-card-stat"><div class="val">$2,800</div><div class="lbl">Avg. deal</div></div>
+            <div class="creator-card-stat"><div class="val">29</div><div class="lbl">Completed</div></div>
+          </div>
+          <div class="creator-platforms">
+            <span class="platform-chip">Instagram</span>
+            <span class="platform-chip">YouTube</span>
+            <span class="tag">Fitness</span>
+            <span class="tag">Wellness</span>
+          </div>
         </div>
-        <div class="creator-stats">
-          <div class="cstat"><span>890K</span> followers</div>
-          <div class="cstat"><span>11.4%</span> ER</div>
-        </div>
-        <div class="creator-tags">
-          <div class="tag accent">Fitness</div>
-          <div class="tag">Wellness</div>
-        </div>
-      </div>
 
-      <div class="creator-card" onclick="showPage('profile')">
-        <div class="creator-avatar" style="background:linear-gradient(135deg,#1a3a1a,#1a4a2a);">💄</div>
-        <div class="creator-name">Jordan Blake</div>
-        <div class="creator-handle">@jordanbeauty</div>
-        <div class="platform-icons">
-          <div class="platform-icon p-instagram">IG</div>
-          <div class="platform-icon p-tiktok">TT</div>
+        <div class="card-interactive creator-card" onclick="nav('profile')">
+          <div class="creator-card-top">
+            <div class="avatar avatar-md" style="background:linear-gradient(135deg,#2a1e1e,#3a2a1e);font-size:20px;">💄</div>
+            <div class="badge badge-amber">Busy</div>
+          </div>
+          <div class="creator-card-info">
+            <div class="name">Jordan Blake</div>
+            <div class="handle">@jordanbeauty</div>
+          </div>
+          <div class="creator-card-stats">
+            <div class="creator-card-stat"><div class="val">3.1M</div><div class="lbl">Followers</div></div>
+            <div class="creator-card-stat"><div class="val">6.7%</div><div class="lbl">Eng. rate</div></div>
+            <div class="creator-card-stat"><div class="val">$7,500</div><div class="lbl">Avg. deal</div></div>
+            <div class="creator-card-stat"><div class="val">61</div><div class="lbl">Completed</div></div>
+          </div>
+          <div class="creator-platforms">
+            <span class="platform-chip">Instagram</span>
+            <span class="platform-chip">TikTok</span>
+            <span class="tag">Beauty</span>
+          </div>
         </div>
-        <div class="creator-stats">
-          <div class="cstat"><span>3.1M</span> followers</div>
-          <div class="cstat"><span>6.7%</span> ER</div>
-        </div>
-        <div class="creator-tags">
-          <div class="tag accent">Beauty</div>
-          <div class="tag">Lifestyle</div>
-        </div>
-      </div>
 
-      <div class="creator-card" onclick="showPage('profile')">
-        <div class="creator-avatar" style="background:linear-gradient(135deg,#1a2a3a,#1a3a4a);">💻</div>
-        <div class="creator-name">Sam Park</div>
-        <div class="creator-handle">@samcodes</div>
-        <div class="platform-icons">
-          <div class="platform-icon p-youtube">YT</div>
-          <div class="platform-icon p-twitter">TW</div>
+        <div class="card-interactive creator-card" onclick="nav('profile')">
+          <div class="creator-card-top">
+            <div class="avatar avatar-md" style="background:linear-gradient(135deg,#1e1e2a,#1e2a3a);font-size:20px;">💻</div>
+            <div class="badge badge-green">
+              <svg width="8" height="8" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
+              Open
+            </div>
+          </div>
+          <div class="creator-card-info">
+            <div class="name">Sam Park</div>
+            <div class="handle">@samcodes</div>
+          </div>
+          <div class="creator-card-stats">
+            <div class="creator-card-stat"><div class="val">540K</div><div class="lbl">Followers</div></div>
+            <div class="creator-card-stat"><div class="val">9.1%</div><div class="lbl">Eng. rate</div></div>
+            <div class="creator-card-stat"><div class="val">$3,200</div><div class="lbl">Avg. deal</div></div>
+            <div class="creator-card-stat"><div class="val">18</div><div class="lbl">Completed</div></div>
+          </div>
+          <div class="creator-platforms">
+            <span class="platform-chip">YouTube</span>
+            <span class="platform-chip">Twitter/X</span>
+            <span class="tag">Tech</span>
+            <span class="tag">Dev</span>
+          </div>
         </div>
-        <div class="creator-stats">
-          <div class="cstat"><span>540K</span> followers</div>
-          <div class="cstat"><span>9.1%</span> ER</div>
-        </div>
-        <div class="creator-tags">
-          <div class="tag accent">Tech</div>
-          <div class="tag">Dev</div>
-        </div>
-      </div>
 
-    </div>
-  </div>
-
-  <!-- FEATURES -->
-  <div class="section" style="padding-top:0;">
-    <div class="section-label">Platform</div>
-    <div class="section-title">Everything you need</div>
-    <div class="section-sub">Built for creators and brands who move fast.</div>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">🎯</div>
-        <div class="feature-title">Smart Matching</div>
-        <div class="feature-desc">AI-powered fit scores between brands and creators.</div>
       </div>
-      <div class="feature-card">
-        <div class="feature-icon">⚡</div>
-        <div class="feature-title">Fast Comms</div>
-        <div class="feature-desc">Built-in messaging and deal negotiation tools.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔒</div>
-        <div class="feature-title">Secure Deals</div>
-        <div class="feature-desc">Escrow-protected payments on every campaign.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">📊</div>
-        <div class="feature-title">Analytics</div>
-        <div class="feature-desc">Real-time performance tracking and ROI reports.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🗂</div>
-        <div class="feature-title">Portfolios</div>
-        <div class="feature-desc">Creator media kits that auto-update with live stats.</div>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🔍</div>
-        <div class="feature-title">Discovery</div>
-        <div class="feature-desc">Advanced filters to find talent in any niche.</div>
+      <div style="text-align:center;margin-top:var(--s7);">
+        <button class="btn-lg outline" onclick="nav('discovery')">View all creators →</button>
       </div>
     </div>
   </div>
 
-  <!-- TESTIMONIALS -->
-  <div class="section" style="padding-top:0;">
-    <div class="section-label">Reviews</div>
-    <div class="section-title">Loved by creators</div>
-    <div class="testimonials">
-      <div class="testimonial">
-        <div class="stars">★★★★★</div>
-        <div class="testimonial-text">"Landed three brand deals in my first week. The matching is actually good — not random brands, but companies that fit my content perfectly."</div>
-        <div class="testimonial-author">
-          <div class="ta-avatar">KL</div>
-          <div><div class="ta-name">Kira Lee</div><div class="ta-role">Lifestyle creator · 480K followers</div></div>
+  <!-- Features -->
+  <div class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="label-accent" style="margin-bottom:10px;">Platform Features</p>
+        <h2 class="display-lg" style="margin-bottom:12px;">Everything in one place.</h2>
+        <p class="body-lg" style="max-width:440px;">From discovery to contract signing to payment — Strivio handles the entire partnership lifecycle.</p>
+      </div>
+      <div class="features-grid">
+        <div class="card feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </div>
+          <h3 class="heading-sm" style="margin-bottom:6px;">Smart Discovery</h3>
+          <p class="body-sm">Search by niche, platform, audience size, engagement rate, and location. No noise, just the right fit.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+          </div>
+          <h3 class="heading-sm" style="margin-bottom:6px;">Live Analytics</h3>
+          <p class="body-sm">Real-time campaign performance dashboards. Track reach, engagement, conversions, and ROI in one view.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <h3 class="heading-sm" style="margin-bottom:6px;">Secure Payments</h3>
+          <p class="body-sm">Escrow-protected deals. Funds release only when deliverables are approved. No disputes, no delays.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          </div>
+          <h3 class="heading-sm" style="margin-bottom:6px;">Instant Messaging</h3>
+          <p class="body-sm">Built-in deal rooms with file sharing, contract templates, and revision tracking — no email needed.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          </div>
+          <h3 class="heading-sm" style="margin-bottom:6px;">Creator Portfolios</h3>
+          <p class="body-sm">Auto-updating media kits that pull live stats from your platforms. Share one link, impress every brand.</p>
+        </div>
+        <div class="card feature-card">
+          <div class="feature-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+          </div>
+          <h3 class="heading-sm" style="margin-bottom:6px;">Fast Matching</h3>
+          <p class="body-sm">Brands get a shortlist of matched creators within 24 hours. Creators get relevant offers, not random spam.</p>
         </div>
       </div>
-      <div class="testimonial">
-        <div class="stars">★★★★★</div>
-        <div class="testimonial-text">"We scaled our influencer campaigns 4x without hiring anyone new. Strivio handles sourcing, outreach, and contracts in one place."</div>
-        <div class="testimonial-author">
-          <div class="ta-avatar">DP</div>
-          <div><div class="ta-name">Dan Pierce</div><div class="ta-role">Head of Growth · NovaTech</div></div>
-        </div>
+    </div>
+  </div>
+
+  <!-- Testimonials -->
+  <div class="section">
+    <div class="container">
+      <div class="section-header">
+        <p class="label-accent" style="margin-bottom:10px;">Reviews</p>
+        <h2 class="display-lg">Creators and brands agree.</h2>
       </div>
-      <div class="testimonial">
-        <div class="stars">★★★★☆</div>
-        <div class="testimonial-text">"Finally a platform that pays on time and doesn't take a massive cut. The inbox UI is clean and deals close faster than anything I've used."</div>
-        <div class="testimonial-author">
-          <div class="ta-avatar">TM</div>
-          <div><div class="ta-name">Tyler Moss</div><div class="ta-role">Gaming creator · 1.2M followers</div></div>
+      <div class="testimonials-grid">
+        <div class="card testimonial-card">
+          <div style="display:flex;gap:2px;margin-bottom:var(--s4);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b" style="flex-shrink:0;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p class="testimonial-text">"Landed three deals in the first ten days. The quality of brand matches was genuinely surprising — actual companies that fit my content, not random drops."</p>
+          <div class="testimonial-author">
+            <div class="avatar avatar-sm" style="background:#1e2a2a;font-size:11px;">KL</div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:var(--text-primary);">Kira Lee</div>
+              <div style="font-size:11px;color:var(--text-tertiary);">Lifestyle · 480K followers</div>
+            </div>
+          </div>
+        </div>
+        <div class="card testimonial-card">
+          <div style="display:flex;gap:2px;margin-bottom:var(--s4);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p class="testimonial-text">"We scaled influencer ops 4x without adding headcount. The contract tooling alone saved us weeks of legal back-and-forth."</p>
+          <div class="testimonial-author">
+            <div class="avatar avatar-sm" style="background:#2a1e1e;font-size:11px;">DP</div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:var(--text-primary);">Dan Pierce</div>
+              <div style="font-size:11px;color:var(--text-tertiary);">Head of Growth · NovaTech</div>
+            </div>
+          </div>
+        </div>
+        <div class="card testimonial-card">
+          <div style="display:flex;gap:2px;margin-bottom:var(--s4);">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="#c44b4b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#c44b4b" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <p class="testimonial-text">"Payments hit on time, every time. The transparency around rates and deliverables is something no other platform has figured out yet."</p>
+          <div class="testimonial-author">
+            <div class="avatar avatar-sm" style="background:#1e1e2a;font-size:11px;">TM</div>
+            <div>
+              <div style="font-size:13px;font-weight:500;color:var(--text-primary);">Tyler Moss</div>
+              <div style="font-size:11px;color:var(--text-tertiary);">Gaming · 1.2M followers</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- CTA -->
-  <div class="cta-section">
-    <h2>Start growing with Strivio.</h2>
-    <p>Join 24,000 creators and 1,200 brands already on the platform.</p>
-    <button class="btn-primary" onclick="showPage('auth')" style="font-size:15px;padding:13px 28px;">Get started free →</button>
-  </div>
-
-  <div class="bottom-nav">
-    <button class="bottom-nav-item active" onclick="showPage('landing')"><span class="bni">🏠</span><span class="bnl">Home</span></button>
-    <button class="bottom-nav-item" onclick="showPage('discovery')"><span class="bni">🔍</span><span class="bnl">Browse</span></button>
-    <button class="bottom-nav-item" onclick="showPage('dashboard')"><span class="bni">📊</span><span class="bnl">Dashboard</span></button>
-    <button class="bottom-nav-item" onclick="showPage('profile')"><span class="bni">👤</span><span class="bnl">Profile</span></button>
-  </div>
-</div>
-
-<!-- PAGE: DASHBOARD -->
-<div class="page" id="page-dashboard">
-  <nav class="nav">
-    <div class="logo" onclick="showPage('landing')">Striv<span>io</span></div>
-    <div class="nav-links">
-      <button class="nav-btn">NovaTech ▾</button>
-    </div>
-  </nav>
-
-  <div class="dash-header">
-    <h2>Sponsor Dashboard</h2>
-    <p>Welcome back, NovaTech · Q2 2026</p>
-    <div class="dash-tabs">
-      <button class="dash-tab active">Overview</button>
-      <button class="dash-tab">Campaigns</button>
-      <button class="dash-tab">Inbox (3)</button>
-      <button class="dash-tab">Analytics</button>
-      <button class="dash-tab">Creators</button>
-    </div>
-  </div>
-
-  <div class="dash-body">
-    <div class="metrics-grid">
-      <div class="metric-card">
-        <div class="metric-label">Total reach</div>
-        <div class="metric-value">12.4M</div>
-        <div class="metric-delta delta-up">↑ 18% this month</div>
+  <div class="container">
+    <div class="cta-block">
+      <p class="label-accent" style="margin-bottom:12px;">Ready to grow?</p>
+      <h2 class="cta-title">Start building partnerships<br>that actually work.</h2>
+      <p class="body-lg cta-sub">Free to join. No hidden fees. Cancel anytime.</p>
+      <div style="display:flex;gap:var(--s3);justify-content:center;flex-wrap:wrap;">
+        <button class="btn-lg primary" onclick="nav('auth')">Create your account</button>
+        <button class="btn-lg outline" onclick="nav('dashboard')">View brand dashboard</button>
       </div>
-      <div class="metric-card">
-        <div class="metric-label">Spend (MTD)</div>
-        <div class="metric-value">$28K</div>
-        <div class="metric-delta delta-up">↑ 5% vs last mo</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Avg. ER</div>
-        <div class="metric-value">7.8%</div>
-        <div class="metric-delta delta-up">↑ 1.2 pts</div>
-      </div>
-      <div class="metric-card">
-        <div class="metric-label">Active campaigns</div>
-        <div class="metric-value">6</div>
-        <div class="metric-delta" style="color:var(--text3);">3 pending</div>
-      </div>
-    </div>
-
-    <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:12px;">Active Campaigns</div>
-    <div class="campaign-list">
-      <div class="campaign-item">
-        <div class="camp-info">
-          <div class="camp-name">Summer Product Launch</div>
-          <div class="camp-meta">8 creators · $12,000 budget</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:68%;"></div></div>
-        </div>
-        <div class="status-badge status-active">Active</div>
-      </div>
-      <div class="campaign-item">
-        <div class="camp-info">
-          <div class="camp-name">Gaming Peripheral Review</div>
-          <div class="camp-meta">3 creators · $4,500 budget</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:40%;"></div></div>
-        </div>
-        <div class="status-badge status-active">Active</div>
-      </div>
-      <div class="campaign-item">
-        <div class="camp-info">
-          <div class="camp-name">App Install Push — July</div>
-          <div class="camp-meta">12 creators · $18,000 budget</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:10%;"></div></div>
-        </div>
-        <div class="status-badge status-pending">Pending</div>
-      </div>
-      <div class="campaign-item">
-        <div class="camp-info">
-          <div class="camp-name">Holiday Brand Awareness</div>
-          <div class="camp-meta">0 creators · $30,000 budget</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:0%;"></div></div>
-        </div>
-        <div class="status-badge status-draft">Draft</div>
-      </div>
-    </div>
-
-    <div style="margin-top:20px;font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:12px;">Sponsorship Inbox</div>
-    <div class="inbox-list">
-      <div class="inbox-item">
-        <div class="inbox-avatar">AR</div>
-        <div class="inbox-content">
-          <div class="inbox-name">Alex Rivera</div>
-          <div class="inbox-preview">Interested in your gaming peripheral campaign — rates attached.</div>
-        </div>
-        <div class="inbox-meta">2h<div class="unread-dot"></div></div>
-      </div>
-      <div class="inbox-item">
-        <div class="inbox-avatar">JB</div>
-        <div class="inbox-content">
-          <div class="inbox-name">Jordan Blake</div>
-          <div class="inbox-preview">Can we schedule a call to discuss the summer launch details?</div>
-        </div>
-        <div class="inbox-meta">5h<div class="unread-dot"></div></div>
-      </div>
-      <div class="inbox-item">
-        <div class="inbox-avatar">SP</div>
-        <div class="inbox-content">
-          <div class="inbox-name">Sam Park</div>
-          <div class="inbox-preview">Loved the product. Happy to move forward with the deal.</div>
-        </div>
-        <div class="inbox-meta">1d</div>
-      </div>
-    </div>
-
-    <div style="margin-top:20px;margin-bottom:8px;">
-      <button class="btn-primary" style="width:100%;" onclick="showPage('discovery')">+ Find New Creators</button>
     </div>
   </div>
 
   <div class="bottom-nav">
-    <button class="bottom-nav-item" onclick="showPage('landing')"><span class="bni">🏠</span><span class="bnl">Home</span></button>
-    <button class="bottom-nav-item" onclick="showPage('discovery')"><span class="bni">🔍</span><span class="bnl">Browse</span></button>
-    <button class="bottom-nav-item active" onclick="showPage('dashboard')"><span class="bni">📊</span><span class="bnl">Dashboard</span></button>
-    <button class="bottom-nav-item" onclick="showPage('profile')"><span class="bni">👤</span><span class="bnl">Profile</span></button>
+    <button class="bnav-item active" onclick="nav('landing')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      Home
+    </button>
+    <button class="bnav-item" onclick="nav('discovery')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      Browse
+    </button>
+    <button class="bnav-item" onclick="nav('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </button>
+    <button class="bnav-item" onclick="nav('auth')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Account
+    </button>
   </div>
 </div>
 
-<!-- PAGE: CREATOR PROFILE -->
-<div class="page" id="page-profile">
+<!-- ════════════ PAGE: DASHBOARD ════════════ -->
+<div id="page-dashboard" class="page">
   <nav class="nav">
-    <div class="logo" onclick="showPage('landing')">Striv<span>io</span></div>
-    <div class="nav-links">
-      <button class="nav-btn" onclick="showPage('discovery')">← Back</button>
-    </div>
-  </nav>
-
-  <div class="profile-header">
-    <div class="profile-avatar-lg">🎮</div>
-    <div class="profile-name">Alex Rivera</div>
-    <div class="profile-handle">@alexplays · Gaming & Tech</div>
-    <div class="profile-tags">
-      <div class="tag accent">Gaming</div>
-      <div class="tag">Tech</div>
-      <div class="tag">Reviews</div>
-      <div class="tag">Streaming</div>
-    </div>
-    <div class="profile-cta">
-      <button class="btn-primary" style="font-size:13px;padding:9px 18px;">Send Offer</button>
-      <button class="btn-secondary" style="font-size:13px;padding:9px 18px;">View Media Kit</button>
-    </div>
-  </div>
-
-  <div class="profile-stats">
-    <div class="profile-stat">
-      <div class="profile-stat-val">2.4M</div>
-      <div class="profile-stat-lbl">Followers</div>
-    </div>
-    <div class="profile-stat">
-      <div class="profile-stat-val">8.2%</div>
-      <div class="profile-stat-lbl">Eng. rate</div>
-    </div>
-    <div class="profile-stat">
-      <div class="profile-stat-val">$4.2K</div>
-      <div class="profile-stat-lbl">Avg. rate</div>
-    </div>
-    <div class="profile-stat">
-      <div class="profile-stat-val">42</div>
-      <div class="profile-stat-lbl">Deals done</div>
-    </div>
-  </div>
-
-  <div class="profile-section">
-    <div class="profile-section-title">Platforms</div>
-    <div style="display:flex;gap:12px;flex-wrap:wrap;">
-      <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:8px 12px;">
-        <div class="platform-icon p-tiktok">TT</div>
-        <div><div style="font-size:12px;font-weight:500;color:var(--text);">TikTok</div><div style="font-size:10px;color:var(--text3);">1.8M</div></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:8px 12px;">
-        <div class="platform-icon p-youtube">YT</div>
-        <div><div style="font-size:12px;font-weight:500;color:var(--text);">YouTube</div><div style="font-size:10px;color:var(--text3);">420K</div></div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:8px 12px;">
-        <div class="platform-icon p-twitter">TW</div>
-        <div><div style="font-size:12px;font-weight:500;color:var(--text);">Twitter</div><div style="font-size:10px;color:var(--text3);">180K</div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="profile-section">
-    <div class="profile-section-title">About</div>
-    <p style="font-size:13px;color:var(--text2);line-height:1.6;">Full-time gaming content creator specializing in FPS, hardware reviews, and AI tooling. Built a loyal community over 4 years with authentic, no-BS content. Open to gaming, tech, and lifestyle brand partnerships.</p>
-  </div>
-
-  <div class="profile-section">
-    <div class="profile-section-title">Recent Content</div>
-    <div class="media-grid">
-      <div class="media-thumb">🎬<span class="views">482K views</span></div>
-      <div class="media-thumb">🎬<span class="views">1.2M views</span></div>
-      <div class="media-thumb">🎬<span class="views">308K views</span></div>
-      <div class="media-thumb">🎬<span class="views">94K views</span></div>
-      <div class="media-thumb">🎬<span class="views">721K views</span></div>
-      <div class="media-thumb">🎬<span class="views">156K views</span></div>
-    </div>
-  </div>
-
-  <div class="profile-section">
-    <div class="profile-section-title">Past Sponsors</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--text2);">Razer</div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--text2);">NordVPN</div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--text2);">Squarespace</div>
-      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--text2);">G Fuel</div>
-    </div>
-  </div>
-
-  <div style="height:20px;"></div>
-
-  <div class="bottom-nav">
-    <button class="bottom-nav-item" onclick="showPage('landing')"><span class="bni">🏠</span><span class="bnl">Home</span></button>
-    <button class="bottom-nav-item" onclick="showPage('discovery')"><span class="bni">🔍</span><span class="bnl">Browse</span></button>
-    <button class="bottom-nav-item" onclick="showPage('dashboard')"><span class="bni">📊</span><span class="bnl">Dashboard</span></button>
-    <button class="bottom-nav-item active" onclick="showPage('profile')"><span class="bni">👤</span><span class="bnl">Profile</span></button>
-  </div>
-</div>
-
-<!-- PAGE: DISCOVERY -->
-<div class="page" id="page-discovery">
-  <nav class="nav">
-    <div class="logo" onclick="showPage('landing')">Striv<span>io</span></div>
-    <div class="nav-links">
-      <button class="nav-btn primary" onclick="showPage('auth')">Sign up</button>
-    </div>
-  </nav>
-
-  <div class="discovery-filters">
-    <div class="search-box">
-      <span style="font-size:14px;color:var(--text3);">🔍</span>
-      <input type="text" placeholder="Search creators by name, niche..." />
-    </div>
-    <div class="filter-row">
-      <button class="filter-chip active">All</button>
-      <button class="filter-chip">Gaming</button>
-      <button class="filter-chip">Fitness</button>
-      <button class="filter-chip">Beauty</button>
-      <button class="filter-chip">Tech</button>
-      <button class="filter-chip">Food</button>
-      <button class="filter-chip">Travel</button>
-      <button class="filter-chip">Finance</button>
-    </div>
-  </div>
-
-  <div class="discovery-grid">
-
-    <div class="disco-card" onclick="showPage('profile')">
-      <div class="disco-avatar">🎮</div>
-      <div class="disco-name">Alex Rivera</div>
-      <div class="disco-handle">@alexplays</div>
-      <div class="disco-stats">
-        <div class="disco-stat"><span>2.4M</span> followers</div>
-        <div class="disco-stat"><span>8.2%</span> eng. rate</div>
-      </div>
-      <div class="creator-tags"><div class="tag accent">Gaming</div></div>
-    </div>
-
-    <div class="disco-card" onclick="showPage('profile')">
-      <div class="disco-avatar">💪</div>
-      <div class="disco-name">Maya Chen</div>
-      <div class="disco-handle">@mayafit</div>
-      <div class="disco-stats">
-        <div class="disco-stat"><span>890K</span> followers</div>
-        <div class="disco-stat"><span>11.4%</span> eng. rate</div>
-      </div>
-      <div class="creator-tags"><div class="tag accent">Fitness</div></div>
-    </div>
-
-    <div class="disco-card" onclick="showPage('profile')">
-      <div class="disco-avatar">💄</div>
-      <div class="disco-name">Jordan Blake</div>
-      <div class="disco-handle">@jordanbeauty</div>
-      <div class="disco-stats">
-        <div class="disco-stat"><span>3.1M</span> followers</div>
-        <div class="disco-stat"><span>6.7%</span> eng. rate</div>
-      </div>
-      <div class="creator-tags"><div class="tag accent">Beauty</div></div>
-    </div>
-
-    <div class="disco-card" onclick="showPage('profile')">
-      <div class="disco-avatar">💻</div>
-      <div class="disco-name">Sam Park</div>
-      <div class="disco-handle">@samcodes</div>
-      <div class="disco-stats">
-        <div class="disco-stat"><span>540K</span> followers</div>
-        <div class="disco-stat"><span>9.1%</span> eng. rate</div>
-      </div>
-      <div class="creator-tags"><div class="tag accent">Tech</div></div>
-    </div>
-
-    <div class="disco-card" onclick="showPage('profile')">
-      <div class="disco-avatar">🍔</div>
-      <div class="disco-name">Priya Sharma</div>
-      <div class="disco-handle">@priyaeats</div>
-      <div class="disco-stats">
-        <div class="disco-stat"><span>1.2M</span> followers</div>
-        <div class="disco-stat"><span>13.2%</span> eng. rate</div>
-      </div>
-      <div class="creator-tags"><div class="tag accent">Food</div></div>
-    </div>
-
-    <div class="disco-card" onclick="showPage('profile')">
-      <div class="disco-avatar">✈️</div>
-      <div class="disco-name">Leo Vance</div>
-      <div class="disco-handle">@leotravels</div>
-      <div class="disco-stats">
-        <div class="disco-stat"><span>680K</span> followers</div>
-        <div class="disco-stat"><span>7.4%</span> eng. rate</div>
-      </div>
-      <div class="creator-tags"><div class="tag accent">Travel</div></div>
-    </div>
-
-  </div>
-
-  <div class="bottom-nav">
-    <button class="bottom-nav-item" onclick="showPage('landing')"><span class="bni">🏠</span><span class="bnl">Home</span></button>
-    <button class="bottom-nav-item active" onclick="showPage('discovery')"><span class="bni">🔍</span><span class="bnl">Browse</span></button>
-    <button class="bottom-nav-item" onclick="showPage('dashboard')"><span class="bni">📊</span><span class="bnl">Dashboard</span></button>
-    <button class="bottom-nav-item" onclick="showPage('profile')"><span class="bni">👤</span><span class="bnl">Profile</span></button>
-  </div>
-</div>
-
-<!-- PAGE: AUTH -->
-<div class="page" id="page-auth">
-  <nav class="nav">
-    <div class="logo" onclick="showPage('landing')">Striv<span>io</span></div>
-    <div class="nav-links">
-      <button class="nav-btn" onclick="showPage('landing')">← Back</button>
-    </div>
-  </nav>
-  <div class="auth-body">
-    <div class="auth-card">
-      <div class="auth-logo">Striv<span>io</span></div>
-      <div class="auth-sub">Create your free account</div>
-
-      <div style="font-size:12px;color:var(--text3);margin-bottom:8px;">I am a...</div>
-      <div class="role-selector">
-        <div class="role-opt active" onclick="selectRole(this)">
-          <div class="role-icon">🎬</div>
-          <div class="role-name">Creator</div>
-          <div class="role-desc">I make content</div>
+    <div class="container">
+      <div class="nav-inner">
+        <div class="nav-logo" onclick="nav('landing')" style="cursor:pointer;">
+          <span class="dot"></span>Strivio
         </div>
-        <div class="role-opt" onclick="selectRole(this)">
-          <div class="role-icon">🏢</div>
-          <div class="role-name">Brand</div>
-          <div class="role-desc">I hire creators</div>
+        <div class="nav-right">
+          <span style="font-size:12px;color:var(--text-tertiary);margin-right:var(--s3);">NovaTech Inc.</span>
+          <div class="avatar avatar-sm" style="background:var(--accent-muted);color:var(--accent-soft);font-weight:600;font-size:11px;">NT</div>
         </div>
       </div>
+    </div>
+  </nav>
 
-      <div class="form-group">
-        <label class="form-label">Full name</label>
-        <input class="form-input" type="text" placeholder="Alex Rivera" />
+  <div class="dash-layout">
+    <!-- Sidebar -->
+    <aside class="dash-sidebar">
+      <div class="sidebar-workspace">
+        <div class="ws-avatar">N</div>
+        <div>
+          <div class="ws-name">NovaTech</div>
+          <div class="ws-plan">Growth plan</div>
+        </div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;color:var(--text-tertiary);"><path d="M6 9l6 6 6-6"/></svg>
       </div>
-      <div class="form-group">
-        <label class="form-label">Email address</label>
-        <input class="form-input" type="email" placeholder="you@example.com" />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input class="form-input" type="password" placeholder="Create a password" />
-      </div>
 
-      <button class="btn-primary" style="width:100%;font-size:14px;padding:12px;" onclick="showPage('dashboard')">Create account →</button>
-
-      <div class="divider">or continue with</div>
-
-      <button class="social-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-        Continue with Google
+      <div class="sidebar-section-label">Overview</div>
+      <button class="sidebar-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="sidebar-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10"/></svg>
+        Analytics
       </button>
 
-      <div class="auth-footer">Already have an account? <a href="#" onclick="return false;">Sign in</a></div>
-    </div>
+      <div class="sidebar-section-label" style="margin-top:var(--s5);">Campaigns</div>
+      <button class="sidebar-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Active <span class="sidebar-badge">6</span>
+      </button>
+      <button class="sidebar-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Pending
+        <span class="sidebar-badge">3</span>
+      </button>
+      <button class="sidebar-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg>
+        Drafts
+      </button>
+
+      <div class="sidebar-section-label" style="margin-top:var(--s5);">Creators</div>
+      <button class="sidebar-item" onclick="nav('discovery')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        Discovery
+      </button>
+      <button class="sidebar-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Saved
+      </button>
+
+      <div class="sidebar-section-label" style="margin-top:var(--s5);">Account</div>
+      <button class="sidebar-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Profile
+      </button>
+      <button class="sidebar-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93l-1.41 1.41M2.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M21 12h-3M3 12H0M12 3V0M12 24v-3"/></svg>
+        Settings
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dash-main">
+      <div class="page-header">
+        <div class="page-header-left">
+          <div class="page-title">Good afternoon, NovaTech</div>
+          <div class="page-sub">Here's what's happening with your campaigns · May 2026</div>
+        </div>
+        <button class="btn-accent" style="font-size:13px;padding:8px 16px;border-radius:var(--r-sm);">+ New Campaign</button>
+      </div>
+
+      <!-- Metrics -->
+      <div class="metrics-grid">
+        <div class="card metric-card">
+          <div class="metric-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Total Reach
+          </div>
+          <div class="metric-value">12.4M</div>
+          <div class="metric-change change-up">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+            18% this month
+          </div>
+        </div>
+        <div class="card metric-card">
+          <div class="metric-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            Spend (MTD)
+          </div>
+          <div class="metric-value">$28K</div>
+          <div class="metric-change change-up">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+            5% vs last month
+          </div>
+        </div>
+        <div class="card metric-card">
+          <div class="metric-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Avg. Eng. Rate
+          </div>
+          <div class="metric-value">7.8%</div>
+          <div class="metric-change change-up">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+            +1.2 pts
+          </div>
+        </div>
+        <div class="card metric-card">
+          <div class="metric-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Active Campaigns
+          </div>
+          <div class="metric-value">6</div>
+          <div class="metric-change change-neu">3 pending approval</div>
+        </div>
+      </div>
+
+      <!-- Reach chart -->
+      <div class="card section-card">
+        <div class="section-card-header">
+          <div class="title">Monthly Reach</div>
+          <button class="action">Last 6 months ↓</button>
+        </div>
+        <div style="display:flex;gap:var(--s5);margin-bottom:var(--s4);">
+          <div class="stat-pill"><span class="val">12.4M</span><span class="lbl">This month</span></div>
+          <div class="stat-pill"><span class="val" style="color:var(--green);">+18%</span><span class="lbl">vs last month</span></div>
+        </div>
+        <div class="chart-area">
+          <div class="chart-bars" id="reachChart"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:var(--s3) var(--s4) 0;font-size:10px;color:var(--text-tertiary);">
+          <span>Dec</span><span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span>
+        </div>
+      </div>
+
+      <!-- Two-col: Campaigns + Inbox -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s4);">
+
+        <div class="card section-card">
+          <div class="section-card-header">
+            <div class="title">Active Campaigns</div>
+            <button class="action">View all →</button>
+          </div>
+          <div class="campaign-row">
+            <div class="campaign-info">
+              <div class="campaign-name">Summer Product Launch</div>
+              <div class="campaign-meta">8 creators · ends Jun 30</div>
+              <div class="progress-track"><div class="progress-fill green" style="width:68%"></div></div>
+            </div>
+            <div class="campaign-right">
+              <div class="campaign-value">$12K</div>
+              <div class="badge badge-green" style="font-size:10px;">Live</div>
+            </div>
+          </div>
+          <div class="campaign-row">
+            <div class="campaign-info">
+              <div class="campaign-name">Gaming Peripheral Review</div>
+              <div class="campaign-meta">3 creators · ends May 28</div>
+              <div class="progress-track"><div class="progress-fill" style="width:40%"></div></div>
+            </div>
+            <div class="campaign-right">
+              <div class="campaign-value">$4.5K</div>
+              <div class="badge badge-green" style="font-size:10px;">Live</div>
+            </div>
+          </div>
+          <div class="campaign-row">
+            <div class="campaign-info">
+              <div class="campaign-name">App Install — Q3</div>
+              <div class="campaign-meta">12 creators · starts Jul 1</div>
+              <div class="progress-track"><div class="progress-fill blue" style="width:10%"></div></div>
+            </div>
+            <div class="campaign-right">
+              <div class="campaign-value">$18K</div>
+              <div class="badge badge-amber" style="font-size:10px;">Pending</div>
+            </div>
+          </div>
+          <div class="campaign-row">
+            <div class="campaign-info">
+              <div class="campaign-name">Holiday Awareness</div>
+              <div class="campaign-meta">0 creators · draft</div>
+              <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+            </div>
+            <div class="campaign-right">
+              <div class="campaign-value">$30K</div>
+              <div class="badge badge-dim" style="font-size:10px;">Draft</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card section-card">
+          <div class="section-card-header">
+            <div class="title">Sponsorship Inbox</div>
+            <button class="action">3 unread</button>
+          </div>
+          <div class="inbox-row">
+            <div class="unread-dot"></div>
+            <div class="avatar avatar-sm" style="background:#1e2a2a;">AR</div>
+            <div class="inbox-body">
+              <div class="inbox-name">Alex Rivera</div>
+              <div class="inbox-preview">Interested in peripheral campaign — rates attached</div>
+            </div>
+            <div class="inbox-time">2h</div>
+          </div>
+          <div class="inbox-row">
+            <div class="unread-dot"></div>
+            <div class="avatar avatar-sm" style="background:#2a1e2a;">JB</div>
+            <div class="inbox-body">
+              <div class="inbox-name">Jordan Blake</div>
+              <div class="inbox-preview">Can we schedule a brief call before moving forward?</div>
+            </div>
+            <div class="inbox-time">5h</div>
+          </div>
+          <div class="inbox-row">
+            <div class="unread-dot"></div>
+            <div class="avatar avatar-sm" style="background:#1e2a1e;">MC</div>
+            <div class="inbox-body">
+              <div class="inbox-name">Maya Chen</div>
+              <div class="inbox-preview">Loved the brief. Ready to move on the summer deal.</div>
+            </div>
+            <div class="inbox-time">8h</div>
+          </div>
+          <div class="inbox-row">
+            <div class="avatar avatar-sm" style="background:#2a2a1e;">SP</div>
+            <div class="inbox-body">
+              <div class="inbox-name">Sam Park</div>
+              <div class="inbox-preview">Contract looks good. Waiting on the style guide.</div>
+            </div>
+            <div class="inbox-time">1d</div>
+          </div>
+          <div style="margin-top:var(--s5);">
+            <button class="btn-accent" style="width:100%;font-size:13px;padding:9px;border-radius:var(--r-sm);" onclick="nav('discovery')">+ Find More Creators</button>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="bnav-item" onclick="nav('landing')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Home
+    </button>
+    <button class="bnav-item" onclick="nav('discovery')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      Browse
+    </button>
+    <button class="bnav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </button>
+    <button class="bnav-item" onclick="nav('auth')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Account
+    </button>
   </div>
 </div>
 
+<!-- ════════════ PAGE: PROFILE ════════════ -->
+<div id="page-profile" class="page">
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <div class="nav-logo" onclick="nav('landing')" style="cursor:pointer;"><span class="dot"></span>Strivio</div>
+        <div class="nav-right">
+          <button class="btn-ghost" onclick="nav('discovery')">← All creators</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="profile-hero">
+    <div class="container">
+      <div class="profile-hero-inner">
+        <div class="avatar avatar-xl" style="background:linear-gradient(135deg,#1e1a2a,#2a1e3a);font-size:32px;flex-shrink:0;">🎮</div>
+        <div class="profile-info">
+          <div class="profile-name-row">
+            <span class="profile-name">Alex Rivera</span>
+            <span class="badge badge-green">
+              <svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg>
+              Open to deals
+            </span>
+          </div>
+          <div class="profile-handle">@alexplays · Gaming & Technology</div>
+          <p class="profile-bio">Full-time gaming and tech content creator. I build an audience that trusts my hardware picks and software reviews. Four years in, 2.4M followers across platforms. Open to gaming, tech, and lifestyle partnerships.</p>
+          <div class="profile-actions">
+            <button class="btn-md primary">Send deal offer</button>
+            <button class="btn-md outline">View media kit</button>
+            <button class="btn-md outline" style="padding:9px 13px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="profile-stats-bar">
+        <div class="profile-stat-item">
+          <div class="profile-stat-val">2.4M</div>
+          <div class="profile-stat-lbl">Total followers</div>
+        </div>
+        <div class="profile-stat-item">
+          <div class="profile-stat-val">8.2%</div>
+          <div class="profile-stat-lbl">Avg. eng. rate</div>
+        </div>
+        <div class="profile-stat-item">
+          <div class="profile-stat-val">$4,200</div>
+          <div class="profile-stat-lbl">Avg. deal size</div>
+        </div>
+        <div class="profile-stat-item">
+          <div class="profile-stat-val">42</div>
+          <div class="profile-stat-lbl">Deals completed</div>
+        </div>
+        <div class="profile-stat-item">
+          <div class="profile-stat-val">4.9</div>
+          <div class="profile-stat-lbl">Brand rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-body">
+    <div class="container">
+      <div class="profile-grid">
+        <!-- Left: content + past work -->
+        <div>
+          <div class="card" style="padding:var(--s6);margin-bottom:var(--s4);">
+            <h3 class="heading-sm" style="margin-bottom:var(--s5);">Recent content</h3>
+            <div class="media-grid">
+              <div class="media-item"><span style="font-size:20px;">🎬</span><span class="views">1.2M views</span></div>
+              <div class="media-item"><span style="font-size:20px;">🎬</span><span class="views">482K views</span></div>
+              <div class="media-item"><span style="font-size:20px;">🎬</span><span class="views">721K views</span></div>
+              <div class="media-item"><span style="font-size:20px;">🎬</span><span class="views">308K views</span></div>
+              <div class="media-item"><span style="font-size:20px;">🎬</span><span class="views">156K views</span></div>
+              <div class="media-item"><span style="font-size:20px;">🎬</span><span class="views">94K views</span></div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:var(--s6);">
+            <h3 class="heading-sm" style="margin-bottom:var(--s5);">Past sponsorships</h3>
+            <div style="display:flex;flex-direction:column;gap:0;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s4) 0;border-bottom:1px solid var(--border-subtle);">
+                <div style="display:flex;align-items:center;gap:var(--s3);">
+                  <div class="avatar avatar-sm" style="border-radius:var(--r-sm);background:#1a1a2a;font-size:11px;font-weight:700;color:#7a9fff;">RZ</div>
+                  <div><div style="font-size:13px;font-weight:500;color:var(--text-primary);">Razer</div><div style="font-size:11px;color:var(--text-tertiary);">Hardware integration · 2025</div></div>
+                </div>
+                <div class="badge badge-green" style="font-size:10px;">Completed</div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s4) 0;border-bottom:1px solid var(--border-subtle);">
+                <div style="display:flex;align-items:center;gap:var(--s3);">
+                  <div class="avatar avatar-sm" style="border-radius:var(--r-sm);background:#1a2a1a;font-size:11px;font-weight:700;color:#5aba8a;">NV</div>
+                  <div><div style="font-size:13px;font-weight:500;color:var(--text-primary);">NordVPN</div><div style="font-size:11px;color:var(--text-tertiary);">Sponsored segment · 2025</div></div>
+                </div>
+                <div class="badge badge-green" style="font-size:10px;">Completed</div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s4) 0;">
+                <div style="display:flex;align-items:center;gap:var(--s3);">
+                  <div class="avatar avatar-sm" style="border-radius:var(--r-sm);background:#2a1a1a;font-size:11px;font-weight:700;color:#e06060;">SS</div>
+                  <div><div style="font-size:13px;font-weight:500;color:var(--text-primary);">Squarespace</div><div style="font-size:11px;color:var(--text-tertiary);">Video series · 2024</div></div>
+                </div>
+                <div class="badge badge-green" style="font-size:10px;">Completed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: sidebar -->
+        <div>
+          <div class="card" style="padding:var(--s6);margin-bottom:var(--s4);">
+            <h3 class="heading-sm" style="margin-bottom:var(--s5);">Platforms</h3>
+            <div style="display:flex;flex-direction:column;gap:var(--s3);">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s3) 0;border-bottom:1px solid var(--border-subtle);">
+                <div style="display:flex;align-items:center;gap:var(--s3);">
+                  <div class="platform-chip">TikTok</div>
+                </div>
+                <div style="text-align:right;"><div style="font-size:14px;font-weight:600;color:var(--text-primary);">1.8M</div><div style="font-size:10px;color:var(--text-tertiary);">7.4% ER</div></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s3) 0;border-bottom:1px solid var(--border-subtle);">
+                <div class="platform-chip">YouTube</div>
+                <div style="text-align:right;"><div style="font-size:14px;font-weight:600;color:var(--text-primary);">420K</div><div style="font-size:10px;color:var(--text-tertiary);">11.2% ER</div></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s3) 0;">
+                <div class="platform-chip">Twitter/X</div>
+                <div style="text-align:right;"><div style="font-size:14px;font-weight:600;color:var(--text-primary);">180K</div><div style="font-size:10px;color:var(--text-tertiary);">4.8% ER</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:var(--s6);margin-bottom:var(--s4);">
+            <h3 class="heading-sm" style="margin-bottom:var(--s5);">Audience</h3>
+            <div style="display:flex;flex-direction:column;gap:var(--s4);">
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:12px;"><span style="color:var(--text-secondary);">18–24</span><span style="color:var(--text-primary);font-weight:500;">38%</span></div>
+                <div class="progress-track"><div class="progress-fill" style="width:38%;background:var(--accent);"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:12px;"><span style="color:var(--text-secondary);">25–34</span><span style="color:var(--text-primary);font-weight:500;">29%</span></div>
+                <div class="progress-track"><div class="progress-fill" style="width:29%;background:var(--blue);"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;margin-bottom:5px;font-size:12px;"><span style="color:var(--text-secondary);">35–44</span><span style="color:var(--text-primary);font-weight:500;">18%</span></div>
+                <div class="progress-track"><div class="progress-fill" style="width:18%;background:var(--green);"></div></div>
+              </div>
+            </div>
+            <div style="margin-top:var(--s5);padding-top:var(--s5);border-top:1px solid var(--border-subtle);">
+              <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:var(--s3);">Top geographies</div>
+              <div style="display:flex;flex-wrap:wrap;gap:var(--s2);">
+                <span class="tag">🇺🇸 US 41%</span>
+                <span class="tag">🇬🇧 UK 12%</span>
+                <span class="tag">🇨🇦 CA 9%</span>
+                <span class="tag">🇦🇺 AU 7%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:var(--s6);">
+            <h3 class="heading-sm" style="margin-bottom:var(--s3);">Niche tags</h3>
+            <div style="display:flex;flex-wrap:wrap;gap:var(--s2);">
+              <span class="badge badge-accent">Gaming</span>
+              <span class="tag">FPS</span>
+              <span class="tag">Hardware</span>
+              <span class="tag">Reviews</span>
+              <span class="tag">AI tools</span>
+              <span class="tag">Streaming</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:80px;"></div>
+  <div class="bottom-nav">
+    <button class="bnav-item" onclick="nav('landing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
+    <button class="bnav-item" onclick="nav('discovery')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Browse</button>
+    <button class="bnav-item" onclick="nav('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</button>
+    <button class="bnav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</button>
+  </div>
+</div>
+
+<!-- ════════════ PAGE: DISCOVERY ════════════ -->
+<div id="page-discovery" class="page">
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <div class="nav-logo" onclick="nav('landing')" style="cursor:pointer;"><span class="dot"></span>Strivio</div>
+        <div class="nav-right">
+          <button class="btn-ghost" onclick="nav('auth')">Sign in</button>
+          <button class="btn-accent" onclick="nav('auth')">Get started</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="discovery-toolbar">
+    <div class="container">
+      <div class="search-input-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search by name, niche, or keyword..." />
+      </div>
+      <div class="filter-pills">
+        <button class="filter-pill active">All creators</button>
+        <button class="filter-pill">Gaming</button>
+        <button class="filter-pill">Fitness</button>
+        <button class="filter-pill">Beauty</button>
+        <button class="filter-pill">Tech</button>
+        <button class="filter-pill">Food</button>
+        <button class="filter-pill">Travel</button>
+        <button class="filter-pill">Finance</button>
+        <button class="filter-pill">Education</button>
+        <button class="filter-pill">Parenting</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--s5) 0 0;">
+      <span style="font-size:13px;color:var(--text-tertiary);">24,180 creators found</span>
+      <button class="btn-ghost" style="font-size:12px;padding:6px 12px;">Sort: Best match ↓</button>
+    </div>
+    <div class="discovery-grid">
+
+      <div class="card-interactive disco-card" onclick="nav('profile')">
+        <div class="disco-card-header">
+          <div class="avatar avatar-md" style="background:linear-gradient(135deg,#1e1a2a,#2a1e3a);font-size:18px;">🎮</div>
+          <div class="badge badge-green" style="align-self:flex-start;"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Open</div>
+        </div>
+        <div class="disco-card-name">Alex Rivera</div>
+        <div class="disco-card-handle">@alexplays</div>
+        <div class="disco-card-stats">
+          <div><div class="disco-stat-val">2.4M</div><div class="disco-stat-lbl">Followers</div></div>
+          <div><div class="disco-stat-val">8.2%</div><div class="disco-stat-lbl">Eng. rate</div></div>
+        </div>
+        <div style="display:flex;gap:var(--s2);flex-wrap:wrap;">
+          <span class="badge badge-accent" style="font-size:10px;">Gaming</span>
+          <span class="tag">Tech</span>
+        </div>
+      </div>
+
+      <div class="card-interactive disco-card" onclick="nav('profile')">
+        <div class="disco-card-header">
+          <div class="avatar avatar-md" style="background:linear-gradient(135deg,#1e2a1e,#2a3a1e);font-size:18px;">💪</div>
+          <div class="badge badge-green" style="align-self:flex-start;"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Open</div>
+        </div>
+        <div class="disco-card-name">Maya Chen</div>
+        <div class="disco-card-handle">@mayafit</div>
+        <div class="disco-card-stats">
+          <div><div class="disco-stat-val">890K</div><div class="disco-stat-lbl">Followers</div></div>
+          <div><div class="disco-stat-val">11.4%</div><div class="disco-stat-lbl">Eng. rate</div></div>
+        </div>
+        <div style="display:flex;gap:var(--s2);flex-wrap:wrap;">
+          <span class="badge badge-accent" style="font-size:10px;">Fitness</span>
+          <span class="tag">Wellness</span>
+        </div>
+      </div>
+
+      <div class="card-interactive disco-card" onclick="nav('profile')">
+        <div class="disco-card-header">
+          <div class="avatar avatar-md" style="background:linear-gradient(135deg,#2a1e1e,#3a2a1e);font-size:18px;">💄</div>
+          <div class="badge badge-amber" style="align-self:flex-start;">Busy</div>
+        </div>
+        <div class="disco-card-name">Jordan Blake</div>
+        <div class="disco-card-handle">@jordanbeauty</div>
+        <div class="disco-card-stats">
+          <div><div class="disco-stat-val">3.1M</div><div class="disco-stat-lbl">Followers</div></div>
+          <div><div class="disco-stat-val">6.7%</div><div class="disco-stat-lbl">Eng. rate</div></div>
+        </div>
+        <div style="display:flex;gap:var(--s2);flex-wrap:wrap;">
+          <span class="badge badge-accent" style="font-size:10px;">Beauty</span>
+        </div>
+      </div>
+
+      <div class="card-interactive disco-card" onclick="nav('profile')">
+        <div class="disco-card-header">
+          <div class="avatar avatar-md" style="background:linear-gradient(135deg,#1e1e2a,#1e2a3a);font-size:18px;">💻</div>
+          <div class="badge badge-green" style="align-self:flex-start;"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Open</div>
+        </div>
+        <div class="disco-card-name">Sam Park</div>
+        <div class="disco-card-handle">@samcodes</div>
+        <div class="disco-card-stats">
+          <div><div class="disco-stat-val">540K</div><div class="disco-stat-lbl">Followers</div></div>
+          <div><div class="disco-stat-val">9.1%</div><div class="disco-stat-lbl">Eng. rate</div></div>
+        </div>
+        <div style="display:flex;gap:var(--s2);flex-wrap:wrap;">
+          <span class="badge badge-accent" style="font-size:10px;">Tech</span>
+          <span class="tag">Dev</span>
+        </div>
+      </div>
+
+      <div class="card-interactive disco-card" onclick="nav('profile')">
+        <div class="disco-card-header">
+          <div class="avatar avatar-md" style="background:linear-gradient(135deg,#2a1a2a,#3a1e2a);font-size:18px;">🍔</div>
+          <div class="badge badge-green" style="align-self:flex-start;"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Open</div>
+        </div>
+        <div class="disco-card-name">Priya Sharma</div>
+        <div class="disco-card-handle">@priyaeats</div>
+        <div class="disco-card-stats">
+          <div><div class="disco-stat-val">1.2M</div><div class="disco-stat-lbl">Followers</div></div>
+          <div><div class="disco-stat-val">13.2%</div><div class="disco-stat-lbl">Eng. rate</div></div>
+        </div>
+        <div style="display:flex;gap:var(--s2);flex-wrap:wrap;">
+          <span class="badge badge-accent" style="font-size:10px;">Food</span>
+        </div>
+      </div>
+
+      <div class="card-interactive disco-card" onclick="nav('profile')">
+        <div class="disco-card-header">
+          <div class="avatar avatar-md" style="background:linear-gradient(135deg,#1e2a2a,#1e3a2a);font-size:18px;">✈️</div>
+          <div class="badge badge-green" style="align-self:flex-start;"><svg width="7" height="7" viewBox="0 0 8 8"><circle cx="4" cy="4" r="3" fill="currentColor"/></svg> Open</div>
+        </div>
+        <div class="disco-card-name">Leo Vance</div>
+        <div class="disco-card-handle">@leotravels</div>
+        <div class="disco-card-stats">
+          <div><div class="disco-stat-val">680K</div><div class="disco-stat-lbl">Followers</div></div>
+          <div><div class="disco-stat-val">7.4%</div><div class="disco-stat-lbl">Eng. rate</div></div>
+        </div>
+        <div style="display:flex;gap:var(--s2);flex-wrap:wrap;">
+          <span class="badge badge-accent" style="font-size:10px;">Travel</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="height:80px;"></div>
+  <div class="bottom-nav">
+    <button class="bnav-item" onclick="nav('landing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
+    <button class="bnav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Browse</button>
+    <button class="bnav-item" onclick="nav('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</button>
+    <button class="bnav-item" onclick="nav('auth')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account</button>
+  </div>
+</div>
+
+<!-- ════════════ PAGE: AUTH ════════════ -->
+<div id="page-auth" class="page">
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <div class="nav-logo" onclick="nav('landing')" style="cursor:pointer;"><span class="dot"></span>Strivio</div>
+        <div class="nav-right">
+          <button class="btn-ghost" onclick="nav('landing')">← Back</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="page-auth" style="display:flex;align-items:center;justify-content:center;min-height:calc(100vh - var(--nav-h) - 80px);padding:var(--s8) var(--s6);">
+    <div style="width:100%;max-width:420px;">
+      <div style="text-align:center;margin-bottom:var(--s7);">
+        <p class="label-accent" style="margin-bottom:var(--s3);">Join Strivio</p>
+        <h1 style="font-family:var(--font-display);font-size:32px;letter-spacing:-0.02em;color:var(--text-primary);font-weight:400;margin-bottom:var(--s3);">Create your account</h1>
+        <p style="font-size:14px;color:var(--text-secondary);">Free to join. No credit card required.</p>
+      </div>
+
+      <div class="card" style="padding:var(--s7);">
+        <div style="font-size:12px;font-weight:500;color:var(--text-tertiary);margin-bottom:var(--s3);">I am a...</div>
+        <div class="role-grid">
+          <div class="role-option active" onclick="selectRole(this)">
+            <span class="role-icon">🎬</span>
+            <div class="role-name">Creator</div>
+            <div class="role-desc">I make content</div>
+          </div>
+          <div class="role-option" onclick="selectRole(this)">
+            <span class="role-icon">🏢</span>
+            <div class="role-name">Brand</div>
+            <div class="role-desc">I hire creators</div>
+          </div>
+        </div>
+
+        <div class="form-stack">
+          <div class="form-field">
+            <label class="form-label">Full name</label>
+            <input class="form-input" type="text" placeholder="Your name" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Email address</label>
+            <input class="form-input" type="email" placeholder="you@example.com" />
+          </div>
+          <div class="form-field">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" placeholder="At least 8 characters" />
+          </div>
+        </div>
+
+        <button class="btn-full" onclick="nav('dashboard')">Create account</button>
+
+        <div class="auth-divider">or</div>
+
+        <button class="social-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+
+        <p style="text-align:center;font-size:12px;color:var(--text-tertiary);margin-top:var(--s5);">Already have an account? <a href="#" onclick="return false;" style="color:var(--accent-soft);">Sign in</a></p>
+      </div>
+
+      <p style="text-align:center;font-size:11px;color:var(--text-tertiary);margin-top:var(--s5);line-height:1.7;">
+        By creating an account you agree to our <a href="#" style="color:var(--text-secondary);">Terms of Service</a> and <a href="#" style="color:var(--text-secondary);">Privacy Policy</a>.
+      </p>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="bnav-item" onclick="nav('landing')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>Home</button>
+    <button class="bnav-item" onclick="nav('discovery')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Browse</button>
+    <button class="bnav-item" onclick="nav('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</button>
+    <button class="bnav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account</button>
+  </div>
 </div>
 
 <script>
-function showPage(id){
+function nav(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   var el=document.getElementById('page-'+id);
-  if(el){el.classList.add('active');el.scrollTop=0;window.scrollTo(0,0);}
+  if(el){ el.classList.add('active'); window.scrollTo({top:0,behavior:'instant'}); }
 }
 function selectRole(el){
-  document.querySelectorAll('.role-opt').forEach(r=>r.classList.remove('active'));
+  el.closest('.role-grid').querySelectorAll('.role-option').forEach(r=>r.classList.remove('active'));
   el.classList.add('active');
 }
-document.querySelectorAll('.filter-chip').forEach(chip=>{
-  chip.addEventListener('click',function(){
-    document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+document.querySelectorAll('.filter-pill').forEach(pill=>{
+  pill.addEventListener('click',function(){
+    this.closest('.filter-pills').querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
     this.classList.add('active');
   });
 });
-document.querySelectorAll('.dash-tab').forEach(tab=>{
-  tab.addEventListener('click',function(){
-    document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
-    this.classList.add('active');
+
+// Build reach chart
+(function(){
+  var data=[42,58,51,71,65,88];
+  var max=Math.max(...data);
+  var chart=document.getElementById('reachChart');
+  if(!chart)return;
+  data.forEach(function(v,i){
+    var bar=document.createElement('div');
+    bar.className='chart-bar'+(i===data.length-1?' highlight':'');
+    bar.style.height=(v/max*100)+'%';
+    bar.title=v+'% of peak';
+    chart.appendChild(bar);
   });
-});
+})();
 </script>
+</body>
+</html>
+HTMLEOF
+echo "Done. File size: $(wc -c < /home/claude/strivio.html) bytes"
