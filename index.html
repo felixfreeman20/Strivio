@@ -1,0 +1,1023 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --bg:#0a0a0c;--bg2:#111115;--bg3:#18181f;--bg4:#1e1e28;
+    --border:#ffffff12;--border2:#ffffff20;
+    --text:#f0f0f5;--text2:#9090a8;--text3:#60607a;
+    --accent:#e8303a;--accent2:#ff5560;--accentbg:#e8303a18;
+    --blue:#3b7dff;--bluebg:#3b7dff15;
+    --radius:12px;--radius2:8px;
+    font-family:'DM Sans',sans-serif;
+  }
+  .app{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+  .page{display:none;} .page.active{display:block;}
+
+  /* NAV */
+  .nav{
+    position:sticky;top:0;z-index:100;
+    background:rgba(10,10,12,0.85);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+    padding:0 20px;height:56px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--text);letter-spacing:-0.5px;cursor:pointer;}
+  .logo span{color:var(--accent);}
+  .nav-links{display:flex;align-items:center;gap:4px;}
+  .nav-btn{
+    background:none;border:none;color:var(--text2);
+    font-family:'DM Sans',sans-serif;font-size:13px;
+    padding:6px 12px;border-radius:var(--radius2);cursor:pointer;
+    transition:color 0.15s,background 0.15s;
+  }
+  .nav-btn:hover{color:var(--text);background:var(--bg3);}
+  .nav-btn.primary{
+    background:var(--accent);color:#fff;font-weight:500;
+  }
+  .nav-btn.primary:hover{background:var(--accent2);}
+
+  /* HERO */
+  .hero{
+    padding:80px 24px 60px;text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .hero::before{
+    content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+    width:500px;height:300px;
+    background:radial-gradient(ellipse, rgba(232,48,58,0.12) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .hero-badge{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--accentbg);border:1px solid rgba(232,48,58,0.25);
+    border-radius:20px;padding:4px 12px;
+    font-size:11px;color:var(--accent2);font-weight:500;
+    letter-spacing:0.5px;text-transform:uppercase;
+    margin-bottom:24px;
+  }
+  .hero-badge::before{content:'●';font-size:7px;}
+  .hero h1{
+    font-family:'Syne',sans-serif;font-weight:800;
+    font-size:36px;line-height:1.1;letter-spacing:-1.5px;
+    color:var(--text);margin-bottom:16px;
+  }
+  .hero h1 em{font-style:normal;color:var(--accent);}
+  .hero p{
+    font-size:15px;color:var(--text2);line-height:1.6;
+    max-width:340px;margin:0 auto 32px;font-weight:300;
+  }
+  .hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--accent);color:#fff;
+    border:none;border-radius:var(--radius2);
+    padding:12px 22px;font-size:14px;font-weight:500;
+    font-family:'DM Sans',sans-serif;cursor:pointer;
+    transition:background 0.15s,transform 0.1s;
+  }
+  .btn-primary:hover{background:var(--accent2);transform:translateY(-1px);}
+  .btn-secondary{
+    background:var(--bg3);color:var(--text);
+    border:1px solid var(--border2);border-radius:var(--radius2);
+    padding:12px 22px;font-size:14px;font-weight:500;
+    font-family:'DM Sans',sans-serif;cursor:pointer;
+    transition:background 0.15s,transform 0.1s;
+  }
+  .btn-secondary:hover{background:var(--bg4);transform:translateY(-1px);}
+
+  /* STATS BAR */
+  .stats-bar{
+    display:flex;justify-content:center;gap:0;
+    border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+    background:var(--bg2);padding:0 24px;
+    flex-wrap:wrap;
+  }
+  .stat-item{
+    flex:1;min-width:100px;max-width:140px;
+    padding:16px 0;text-align:center;
+    border-right:1px solid var(--border);
+  }
+  .stat-item:last-child{border-right:none;}
+  .stat-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--text);}
+  .stat-lbl{font-size:11px;color:var(--text3);margin-top:2px;}
+
+  /* SECTION */
+  .section{padding:48px 24px;}
+  .section-label{
+    font-size:11px;text-transform:uppercase;letter-spacing:1px;
+    color:var(--accent);font-weight:500;margin-bottom:8px;
+  }
+  .section-title{
+    font-family:'Syne',sans-serif;font-weight:700;
+    font-size:26px;letter-spacing:-0.8px;
+    color:var(--text);margin-bottom:8px;line-height:1.15;
+  }
+  .section-sub{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:28px;}
+
+  /* CREATOR CARDS */
+  .creator-scroll{
+    display:flex;gap:14px;overflow-x:auto;
+    padding-bottom:8px;margin:0 -24px;padding-left:24px;padding-right:24px;
+    scrollbar-width:none;
+  }
+  .creator-scroll::-webkit-scrollbar{display:none;}
+  .creator-card{
+    flex:0 0 200px;
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px;
+    transition:border-color 0.2s,transform 0.2s;cursor:pointer;
+  }
+  .creator-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+  .creator-avatar{
+    width:48px;height:48px;border-radius:50%;
+    margin-bottom:12px;object-fit:cover;
+    background:var(--bg4);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--text2);
+  }
+  .creator-name{font-size:14px;font-weight:500;color:var(--text);margin-bottom:2px;}
+  .creator-handle{font-size:12px;color:var(--text3);margin-bottom:10px;}
+  .platform-icons{display:flex;gap:5px;margin-bottom:10px;}
+  .platform-icon{
+    width:22px;height:22px;border-radius:5px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:700;
+  }
+  .p-tiktok{background:#1a1a2a;color:#fff;}
+  .p-youtube{background:#ff0000;color:#fff;}
+  .p-instagram{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff;}
+  .p-twitter{background:#1da1f2;color:#fff;}
+  .creator-stats{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+  .cstat{background:var(--bg3);border-radius:5px;padding:3px 8px;font-size:10px;color:var(--text2);}
+  .cstat span{color:var(--text);font-weight:500;}
+  .creator-tags{display:flex;gap:4px;flex-wrap:wrap;}
+  .tag{
+    background:var(--bg3);border:1px solid var(--border);
+    border-radius:20px;padding:2px 8px;font-size:10px;color:var(--text3);
+  }
+  .tag.accent{background:var(--accentbg);border-color:rgba(232,48,58,0.2);color:var(--accent2);}
+
+  /* FEATURES */
+  .features-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .feature-card{
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px;
+    transition:border-color 0.2s;
+  }
+  .feature-card:hover{border-color:var(--border2);}
+  .feature-icon{
+    width:36px;height:36px;border-radius:8px;
+    background:var(--accentbg);border:1px solid rgba(232,48,58,0.2);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:10px;font-size:16px;
+  }
+  .feature-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px;}
+  .feature-desc{font-size:11px;color:var(--text3);line-height:1.5;}
+
+  /* TESTIMONIALS */
+  .testimonials{display:flex;flex-direction:column;gap:12px;}
+  .testimonial{
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px;
+  }
+  .testimonial-text{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:12px;font-style:italic;}
+  .testimonial-author{display:flex;align-items:center;gap:10px;}
+  .ta-avatar{
+    width:32px;height:32px;border-radius:50%;
+    background:var(--bg4);display:flex;align-items:center;
+    justify-content:center;font-size:12px;font-weight:600;color:var(--text2);
+  }
+  .ta-name{font-size:13px;font-weight:500;color:var(--text);}
+  .ta-role{font-size:11px;color:var(--text3);}
+  .stars{color:var(--accent);font-size:11px;margin-bottom:8px;}
+
+  /* FINAL CTA */
+  .cta-section{
+    margin:0 24px 48px;
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:16px;padding:40px 24px;text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .cta-section::before{
+    content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+    background:radial-gradient(ellipse at 50% 0%, rgba(232,48,58,0.08) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .cta-section h2{
+    font-family:'Syne',sans-serif;font-size:24px;font-weight:800;
+    letter-spacing:-0.8px;color:var(--text);margin-bottom:8px;
+  }
+  .cta-section p{font-size:14px;color:var(--text2);margin-bottom:24px;}
+
+  /* DASHBOARD PAGE */
+  .dash-header{padding:20px 24px 0;border-bottom:1px solid var(--border);background:var(--bg2);}
+  .dash-header h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.5px;}
+  .dash-header p{font-size:12px;color:var(--text3);margin-top:2px;padding-bottom:16px;}
+  .dash-tabs{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;}
+  .dash-tab{
+    flex:0 0 auto;padding:10px 16px;font-size:13px;
+    color:var(--text3);border-bottom:2px solid transparent;
+    cursor:pointer;transition:color 0.15s;white-space:nowrap;
+    background:none;border-left:none;border-right:none;border-top:none;
+    font-family:'DM Sans',sans-serif;
+  }
+  .dash-tab.active{color:var(--text);border-bottom-color:var(--accent);}
+  .dash-body{padding:20px 24px;}
+  .metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+  .metric-card{
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px;
+  }
+  .metric-label{font-size:11px;color:var(--text3);margin-bottom:4px;}
+  .metric-value{font-family:'Syne',sans-serif;font-size:22px;font-weight:700;color:var(--text);}
+  .metric-delta{font-size:11px;margin-top:2px;}
+  .delta-up{color:#4caf50;} .delta-down{color:var(--accent);}
+
+  .campaign-list{display:flex;flex-direction:column;gap:10px;}
+  .campaign-item{
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;
+  }
+  .camp-info{flex:1;min-width:0;}
+  .camp-name{font-size:13px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .camp-meta{font-size:11px;color:var(--text3);margin-top:2px;}
+  .status-badge{
+    flex:0 0 auto;border-radius:20px;padding:3px 10px;font-size:10px;font-weight:500;
+  }
+  .status-active{background:#4caf5020;color:#4caf50;}
+  .status-pending{background:#ff980020;color:#ff9800;}
+  .status-draft{background:var(--bg3);color:var(--text3);}
+  .progress-bar{height:3px;background:var(--bg4);border-radius:2px;margin-top:6px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--accent);border-radius:2px;}
+
+  /* CREATOR PROFILE PAGE */
+  .profile-header{
+    background:var(--bg2);border-bottom:1px solid var(--border);
+    padding:24px;text-align:center;
+  }
+  .profile-avatar-lg{
+    width:72px;height:72px;border-radius:50%;
+    background:var(--bg4);border:2px solid var(--border2);
+    margin:0 auto 12px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--text2);
+  }
+  .profile-name{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:3px;}
+  .profile-handle{font-size:13px;color:var(--text3);margin-bottom:12px;}
+  .profile-tags{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;}
+  .profile-cta{display:flex;gap:8px;justify-content:center;}
+  .profile-stats{
+    display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+    background:var(--bg);
+  }
+  .profile-stat{flex:1;text-align:center;padding:14px 0;border-right:1px solid var(--border);}
+  .profile-stat:last-child{border-right:none;}
+  .profile-stat-val{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--text);}
+  .profile-stat-lbl{font-size:10px;color:var(--text3);margin-top:2px;}
+  .profile-section{padding:20px 24px;border-bottom:1px solid var(--border);}
+  .profile-section-title{font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:12px;}
+  .media-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+  .media-thumb{
+    aspect-ratio:1;background:var(--bg3);border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:10px;color:var(--text3);border:1px solid var(--border);
+    flex-direction:column;gap:4px;
+  }
+  .media-thumb .views{font-size:9px;color:var(--text3);}
+
+  /* DISCOVERY PAGE */
+  .discovery-filters{
+    padding:16px 24px;background:var(--bg2);border-bottom:1px solid var(--border);
+  }
+  .filter-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+  .filter-chip{
+    flex:0 0 auto;background:var(--bg3);border:1px solid var(--border);
+    border-radius:20px;padding:6px 14px;font-size:12px;color:var(--text2);
+    cursor:pointer;transition:all 0.15s;white-space:nowrap;
+    font-family:'DM Sans',sans-serif;
+  }
+  .filter-chip.active{background:var(--accentbg);border-color:rgba(232,48,58,0.3);color:var(--accent2);}
+  .filter-chip:hover{border-color:var(--border2);color:var(--text);}
+  .search-box{
+    display:flex;align-items:center;gap:10px;
+    background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius2);
+    padding:10px 14px;margin-bottom:12px;
+  }
+  .search-box input{
+    background:none;border:none;outline:none;
+    font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;
+    flex:1;
+  }
+  .search-box input::placeholder{color:var(--text3);}
+  .discovery-grid{
+    padding:16px 24px;
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  }
+  .disco-card{
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px;
+    transition:border-color 0.2s,transform 0.15s;cursor:pointer;
+  }
+  .disco-card:hover{border-color:var(--border2);transform:translateY(-1px);}
+  .disco-avatar{
+    width:40px;height:40px;border-radius:50%;
+    background:var(--bg4);margin-bottom:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--text2);
+  }
+  .disco-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:1px;}
+  .disco-handle{font-size:10px;color:var(--text3);margin-bottom:8px;}
+  .disco-stats{display:flex;flex-direction:column;gap:3px;margin-bottom:8px;}
+  .disco-stat{font-size:10px;color:var(--text3);}
+  .disco-stat span{color:var(--text);font-weight:500;}
+
+  /* AUTH PAGE */
+  .auth-page{min-height:100vh;background:var(--bg);display:flex;flex-direction:column;}
+  .auth-body{flex:1;display:flex;align-items:center;justify-content:center;padding:24px;}
+  .auth-card{
+    background:var(--bg2);border:1px solid var(--border);
+    border-radius:16px;padding:28px 24px;width:100%;max-width:360px;
+  }
+  .auth-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:var(--text);margin-bottom:4px;}
+  .auth-logo span{color:var(--accent);}
+  .auth-sub{font-size:13px;color:var(--text3);margin-bottom:24px;}
+  .role-selector{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
+  .role-opt{
+    background:var(--bg3);border:1px solid var(--border);
+    border-radius:var(--radius);padding:12px;text-align:center;
+    cursor:pointer;transition:all 0.15s;
+  }
+  .role-opt.active{background:var(--accentbg);border-color:rgba(232,48,58,0.35);}
+  .role-icon{font-size:22px;margin-bottom:4px;}
+  .role-name{font-size:12px;font-weight:500;color:var(--text);}
+  .role-desc{font-size:10px;color:var(--text3);margin-top:2px;}
+  .form-group{margin-bottom:14px;}
+  .form-label{font-size:12px;color:var(--text2);margin-bottom:5px;display:block;}
+  .form-input{
+    width:100%;background:var(--bg3);border:1px solid var(--border);
+    border-radius:var(--radius2);padding:10px 14px;
+    font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;
+    outline:none;transition:border-color 0.15s;
+  }
+  .form-input:focus{border-color:var(--accent);}
+  .form-input::placeholder{color:var(--text3);}
+  .divider{
+    display:flex;align-items:center;gap:10px;margin:16px 0;
+    font-size:11px;color:var(--text3);
+  }
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+  .social-btn{
+    width:100%;background:var(--bg3);border:1px solid var(--border);
+    border-radius:var(--radius2);padding:10px;font-size:13px;
+    color:var(--text2);font-family:'DM Sans',sans-serif;cursor:pointer;
+    transition:background 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .social-btn:hover{background:var(--bg4);}
+  .auth-footer{font-size:12px;color:var(--text3);text-align:center;margin-top:16px;}
+  .auth-footer a{color:var(--accent2);text-decoration:none;}
+
+  /* BOTTOM NAV */
+  .bottom-nav{
+    position:sticky;bottom:0;background:rgba(10,10,12,0.95);
+    backdrop-filter:blur(16px);border-top:1px solid var(--border);
+    display:flex;height:56px;
+  }
+  .bottom-nav-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;gap:2px;cursor:pointer;
+    border:none;background:none;transition:all 0.15s;
+    font-family:'DM Sans',sans-serif;
+  }
+  .bottom-nav-item .bni{font-size:18px;}
+  .bottom-nav-item .bnl{font-size:9px;color:var(--text3);}
+  .bottom-nav-item.active .bni{color:var(--accent);}
+  .bottom-nav-item.active .bnl{color:var(--accent);}
+  .bottom-nav-item:not(.active) .bni{color:var(--text3);}
+
+  /* INBOX */
+  .inbox-list{padding:0 24px;display:flex;flex-direction:column;gap:0;}
+  .inbox-item{
+    display:flex;align-items:center;gap:12px;
+    padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;
+    transition:background 0.1s;
+  }
+  .inbox-avatar{
+    width:40px;height:40px;border-radius:50%;flex:0 0 40px;
+    background:var(--bg3);display:flex;align-items:center;
+    justify-content:center;font-size:13px;font-weight:600;color:var(--text2);
+  }
+  .inbox-content{flex:1;min-width:0;}
+  .inbox-name{font-size:13px;font-weight:500;color:var(--text);}
+  .inbox-preview{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .inbox-meta{font-size:10px;color:var(--text3);flex:0 0 auto;text-align:right;}
+  .unread-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin:3px 0 0 auto;}
+</style>
+
+<h2 class="sr-only">Strivio — creator and sponsor platform prototype with landing page, dashboard, creator profile, discovery, and login pages</h2>
+
+<div class="app" id="app">
+
+<!-- PAGE: LANDING -->
+<div class="page active" id="page-landing">
+  <nav class="nav">
+    <div class="logo">Striv<span>io</span></div>
+    <div class="nav-links">
+      <button class="nav-btn" onclick="showPage('discovery')">Browse</button>
+      <button class="nav-btn" onclick="showPage('dashboard')">Dashboard</button>
+      <button class="nav-btn primary" onclick="showPage('auth')">Sign up</button>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">Now in Beta</div>
+    <h1>Where creators and<br><em>sponsors connect.</em></h1>
+    <p>Strivio helps creators land sponsorships and helps brands discover the right talent — faster than ever.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('auth')">Find Sponsors →</button>
+      <button class="btn-secondary" onclick="showPage('dashboard')">Hire Creators</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-val">24K+</div><div class="stat-lbl">Creators</div></div>
+    <div class="stat-item"><div class="stat-val">1.2K</div><div class="stat-lbl">Brands</div></div>
+    <div class="stat-item"><div class="stat-val">$8.4M</div><div class="stat-lbl">Paid out</div></div>
+    <div class="stat-item"><div class="stat-val">94%</div><div class="stat-lbl">Match rate</div></div>
+  </div>
+
+  <!-- CREATOR SHOWCASE -->
+  <div class="section">
+    <div class="section-label">Top Creators</div>
+    <div class="section-title">Discover talent</div>
+    <div class="section-sub">Browse verified creators across every niche.</div>
+    <div class="creator-scroll">
+
+      <div class="creator-card" onclick="showPage('profile')">
+        <div class="creator-avatar" style="background:linear-gradient(135deg,#1a1a3a,#2a1a4a);">🎮</div>
+        <div class="creator-name">Alex Rivera</div>
+        <div class="creator-handle">@alexplays</div>
+        <div class="platform-icons">
+          <div class="platform-icon p-tiktok">TT</div>
+          <div class="platform-icon p-youtube">YT</div>
+          <div class="platform-icon p-twitter">TW</div>
+        </div>
+        <div class="creator-stats">
+          <div class="cstat"><span>2.4M</span> followers</div>
+          <div class="cstat"><span>8.2%</span> ER</div>
+        </div>
+        <div class="creator-tags">
+          <div class="tag accent">Gaming</div>
+          <div class="tag">Tech</div>
+        </div>
+      </div>
+
+      <div class="creator-card" onclick="showPage('profile')">
+        <div class="creator-avatar" style="background:linear-gradient(135deg,#3a1a1a,#4a2a1a);">💪</div>
+        <div class="creator-name">Maya Chen</div>
+        <div class="creator-handle">@mayafit</div>
+        <div class="platform-icons">
+          <div class="platform-icon p-instagram">IG</div>
+          <div class="platform-icon p-youtube">YT</div>
+        </div>
+        <div class="creator-stats">
+          <div class="cstat"><span>890K</span> followers</div>
+          <div class="cstat"><span>11.4%</span> ER</div>
+        </div>
+        <div class="creator-tags">
+          <div class="tag accent">Fitness</div>
+          <div class="tag">Wellness</div>
+        </div>
+      </div>
+
+      <div class="creator-card" onclick="showPage('profile')">
+        <div class="creator-avatar" style="background:linear-gradient(135deg,#1a3a1a,#1a4a2a);">💄</div>
+        <div class="creator-name">Jordan Blake</div>
+        <div class="creator-handle">@jordanbeauty</div>
+        <div class="platform-icons">
+          <div class="platform-icon p-instagram">IG</div>
+          <div class="platform-icon p-tiktok">TT</div>
+        </div>
+        <div class="creator-stats">
+          <div class="cstat"><span>3.1M</span> followers</div>
+          <div class="cstat"><span>6.7%</span> ER</div>
+        </div>
+        <div class="creator-tags">
+          <div class="tag accent">Beauty</div>
+          <div class="tag">Lifestyle</div>
+        </div>
+      </div>
+
+      <div class="creator-card" onclick="showPage('profile')">
+        <div class="creator-avatar" style="background:linear-gradient(135deg,#1a2a3a,#1a3a4a);">💻</div>
+        <div class="creator-name">Sam Park</div>
+        <div class="creator-handle">@samcodes</div>
+        <div class="platform-icons">
+          <div class="platform-icon p-youtube">YT</div>
+          <div class="platform-icon p-twitter">TW</div>
+        </div>
+        <div class="creator-stats">
+          <div class="cstat"><span>540K</span> followers</div>
+          <div class="cstat"><span>9.1%</span> ER</div>
+        </div>
+        <div class="creator-tags">
+          <div class="tag accent">Tech</div>
+          <div class="tag">Dev</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section" style="padding-top:0;">
+    <div class="section-label">Platform</div>
+    <div class="section-title">Everything you need</div>
+    <div class="section-sub">Built for creators and brands who move fast.</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <div class="feature-title">Smart Matching</div>
+        <div class="feature-desc">AI-powered fit scores between brands and creators.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <div class="feature-title">Fast Comms</div>
+        <div class="feature-desc">Built-in messaging and deal negotiation tools.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <div class="feature-title">Secure Deals</div>
+        <div class="feature-desc">Escrow-protected payments on every campaign.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Analytics</div>
+        <div class="feature-desc">Real-time performance tracking and ROI reports.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🗂</div>
+        <div class="feature-title">Portfolios</div>
+        <div class="feature-desc">Creator media kits that auto-update with live stats.</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <div class="feature-title">Discovery</div>
+        <div class="feature-desc">Advanced filters to find talent in any niche.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="section" style="padding-top:0;">
+    <div class="section-label">Reviews</div>
+    <div class="section-title">Loved by creators</div>
+    <div class="testimonials">
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">"Landed three brand deals in my first week. The matching is actually good — not random brands, but companies that fit my content perfectly."</div>
+        <div class="testimonial-author">
+          <div class="ta-avatar">KL</div>
+          <div><div class="ta-name">Kira Lee</div><div class="ta-role">Lifestyle creator · 480K followers</div></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <div class="testimonial-text">"We scaled our influencer campaigns 4x without hiring anyone new. Strivio handles sourcing, outreach, and contracts in one place."</div>
+        <div class="testimonial-author">
+          <div class="ta-avatar">DP</div>
+          <div><div class="ta-name">Dan Pierce</div><div class="ta-role">Head of Growth · NovaTech</div></div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★☆</div>
+        <div class="testimonial-text">"Finally a platform that pays on time and doesn't take a massive cut. The inbox UI is clean and deals close faster than anything I've used."</div>
+        <div class="testimonial-author">
+          <div class="ta-avatar">TM</div>
+          <div><div class="ta-name">Tyler Moss</div><div class="ta-role">Gaming creator · 1.2M followers</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <h2>Start growing with Strivio.</h2>
+    <p>Join 24,000 creators and 1,200 brands already on the platform.</p>
+    <button class="btn-primary" onclick="showPage('auth')" style="font-size:15px;padding:13px 28px;">Get started free →</button>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="bottom-nav-item active" onclick="showPage('landing')"><span class="bni">🏠</span><span class="bnl">Home</span></button>
+    <button class="bottom-nav-item" onclick="showPage('discovery')"><span class="bni">🔍</span><span class="bnl">Browse</span></button>
+    <button class="bottom-nav-item" onclick="showPage('dashboard')"><span class="bni">📊</span><span class="bnl">Dashboard</span></button>
+    <button class="bottom-nav-item" onclick="showPage('profile')"><span class="bni">👤</span><span class="bnl">Profile</span></button>
+  </div>
+</div>
+
+<!-- PAGE: DASHBOARD -->
+<div class="page" id="page-dashboard">
+  <nav class="nav">
+    <div class="logo" onclick="showPage('landing')">Striv<span>io</span></div>
+    <div class="nav-links">
+      <button class="nav-btn">NovaTech ▾</button>
+    </div>
+  </nav>
+
+  <div class="dash-header">
+    <h2>Sponsor Dashboard</h2>
+    <p>Welcome back, NovaTech · Q2 2026</p>
+    <div class="dash-tabs">
+      <button class="dash-tab active">Overview</button>
+      <button class="dash-tab">Campaigns</button>
+      <button class="dash-tab">Inbox (3)</button>
+      <button class="dash-tab">Analytics</button>
+      <button class="dash-tab">Creators</button>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Total reach</div>
+        <div class="metric-value">12.4M</div>
+        <div class="metric-delta delta-up">↑ 18% this month</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Spend (MTD)</div>
+        <div class="metric-value">$28K</div>
+        <div class="metric-delta delta-up">↑ 5% vs last mo</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Avg. ER</div>
+        <div class="metric-value">7.8%</div>
+        <div class="metric-delta delta-up">↑ 1.2 pts</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Active campaigns</div>
+        <div class="metric-value">6</div>
+        <div class="metric-delta" style="color:var(--text3);">3 pending</div>
+      </div>
+    </div>
+
+    <div style="font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:12px;">Active Campaigns</div>
+    <div class="campaign-list">
+      <div class="campaign-item">
+        <div class="camp-info">
+          <div class="camp-name">Summer Product Launch</div>
+          <div class="camp-meta">8 creators · $12,000 budget</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:68%;"></div></div>
+        </div>
+        <div class="status-badge status-active">Active</div>
+      </div>
+      <div class="campaign-item">
+        <div class="camp-info">
+          <div class="camp-name">Gaming Peripheral Review</div>
+          <div class="camp-meta">3 creators · $4,500 budget</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:40%;"></div></div>
+        </div>
+        <div class="status-badge status-active">Active</div>
+      </div>
+      <div class="campaign-item">
+        <div class="camp-info">
+          <div class="camp-name">App Install Push — July</div>
+          <div class="camp-meta">12 creators · $18,000 budget</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:10%;"></div></div>
+        </div>
+        <div class="status-badge status-pending">Pending</div>
+      </div>
+      <div class="campaign-item">
+        <div class="camp-info">
+          <div class="camp-name">Holiday Brand Awareness</div>
+          <div class="camp-meta">0 creators · $30,000 budget</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:0%;"></div></div>
+        </div>
+        <div class="status-badge status-draft">Draft</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;font-size:12px;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:12px;">Sponsorship Inbox</div>
+    <div class="inbox-list">
+      <div class="inbox-item">
+        <div class="inbox-avatar">AR</div>
+        <div class="inbox-content">
+          <div class="inbox-name">Alex Rivera</div>
+          <div class="inbox-preview">Interested in your gaming peripheral campaign — rates attached.</div>
+        </div>
+        <div class="inbox-meta">2h<div class="unread-dot"></div></div>
+      </div>
+      <div class="inbox-item">
+        <div class="inbox-avatar">JB</div>
+        <div class="inbox-content">
+          <div class="inbox-name">Jordan Blake</div>
+          <div class="inbox-preview">Can we schedule a call to discuss the summer launch details?</div>
+        </div>
+        <div class="inbox-meta">5h<div class="unread-dot"></div></div>
+      </div>
+      <div class="inbox-item">
+        <div class="inbox-avatar">SP</div>
+        <div class="inbox-content">
+          <div class="inbox-name">Sam Park</div>
+          <div class="inbox-preview">Loved the product. Happy to move forward with the deal.</div>
+        </div>
+        <div class="inbox-meta">1d</div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;margin-bottom:8px;">
+      <button class="btn-primary" style="width:100%;" onclick="showPage('discovery')">+ Find New Creators</button>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="bottom-nav-item" onclick="showPage('landing')"><span class="bni">🏠</span><span class="bnl">Home</span></button>
+    <button class="bottom-nav-item" onclick="showPage('discovery')"><span class="bni">🔍</span><span class="bnl">Browse</span></button>
+    <button class="bottom-nav-item active" onclick="showPage('dashboard')"><span class="bni">📊</span><span class="bnl">Dashboard</span></button>
+    <button class="bottom-nav-item" onclick="showPage('profile')"><span class="bni">👤</span><span class="bnl">Profile</span></button>
+  </div>
+</div>
+
+<!-- PAGE: CREATOR PROFILE -->
+<div class="page" id="page-profile">
+  <nav class="nav">
+    <div class="logo" onclick="showPage('landing')">Striv<span>io</span></div>
+    <div class="nav-links">
+      <button class="nav-btn" onclick="showPage('discovery')">← Back</button>
+    </div>
+  </nav>
+
+  <div class="profile-header">
+    <div class="profile-avatar-lg">🎮</div>
+    <div class="profile-name">Alex Rivera</div>
+    <div class="profile-handle">@alexplays · Gaming & Tech</div>
+    <div class="profile-tags">
+      <div class="tag accent">Gaming</div>
+      <div class="tag">Tech</div>
+      <div class="tag">Reviews</div>
+      <div class="tag">Streaming</div>
+    </div>
+    <div class="profile-cta">
+      <button class="btn-primary" style="font-size:13px;padding:9px 18px;">Send Offer</button>
+      <button class="btn-secondary" style="font-size:13px;padding:9px 18px;">View Media Kit</button>
+    </div>
+  </div>
+
+  <div class="profile-stats">
+    <div class="profile-stat">
+      <div class="profile-stat-val">2.4M</div>
+      <div class="profile-stat-lbl">Followers</div>
+    </div>
+    <div class="profile-stat">
+      <div class="profile-stat-val">8.2%</div>
+      <div class="profile-stat-lbl">Eng. rate</div>
+    </div>
+    <div class="profile-stat">
+      <div class="profile-stat-val">$4.2K</div>
+      <div class="profile-stat-lbl">Avg. rate</div>
+    </div>
+    <div class="profile-stat">
+      <div class="profile-stat-val">42</div>
+      <div class="profile-stat-lbl">Deals done</div>
+    </div>
+  </div>
+
+  <div class="profile-section">
+    <div class="profile-section-title">Platforms</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:8px 12px;">
+        <div class="platform-icon p-tiktok">TT</div>
+        <div><div style="font-size:12px;font-weight:500;color:var(--text);">TikTok</div><div style="font-size:10px;color:var(--text3);">1.8M</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:8px 12px;">
+        <div class="platform-icon p-youtube">YT</div>
+        <div><div style="font-size:12px;font-weight:500;color:var(--text);">YouTube</div><div style="font-size:10px;color:var(--text3);">420K</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius2);padding:8px 12px;">
+        <div class="platform-icon p-twitter">TW</div>
+        <div><div style="font-size:12px;font-weight:500;color:var(--text);">Twitter</div><div style="font-size:10px;color:var(--text3);">180K</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-section">
+    <div class="profile-section-title">About</div>
+    <p style="font-size:13px;color:var(--text2);line-height:1.6;">Full-time gaming content creator specializing in FPS, hardware reviews, and AI tooling. Built a loyal community over 4 years with authentic, no-BS content. Open to gaming, tech, and lifestyle brand partnerships.</p>
+  </div>
+
+  <div class="profile-section">
+    <div class="profile-section-title">Recent Content</div>
+    <div class="media-grid">
+      <div class="media-thumb">🎬<span class="views">482K views</span></div>
+      <div class="media-thumb">🎬<span class="views">1.2M views</span></div>
+      <div class="media-thumb">🎬<span class="views">308K views</span></div>
+      <div class="media-thumb">🎬<span class="views">94K views</span></div>
+      <div class="media-thumb">🎬<span class="views">721K views</span></div>
+      <div class="media-thumb">🎬<span class="views">156K views</span></div>
+    </div>
+  </div>
+
+  <div class="profile-section">
+    <div class="profile-section-title">Past Sponsors</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--text2);">Razer</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--text2);">NordVPN</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--text2);">Squarespace</div>
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 12px;font-size:12px;color:var(--text2);">G Fuel</div>
+    </div>
+  </div>
+
+  <div style="height:20px;"></div>
+
+  <div class="bottom-nav">
+    <button class="bottom-nav-item" onclick="showPage('landing')"><span class="bni">🏠</span><span class="bnl">Home</span></button>
+    <button class="bottom-nav-item" onclick="showPage('discovery')"><span class="bni">🔍</span><span class="bnl">Browse</span></button>
+    <button class="bottom-nav-item" onclick="showPage('dashboard')"><span class="bni">📊</span><span class="bnl">Dashboard</span></button>
+    <button class="bottom-nav-item active" onclick="showPage('profile')"><span class="bni">👤</span><span class="bnl">Profile</span></button>
+  </div>
+</div>
+
+<!-- PAGE: DISCOVERY -->
+<div class="page" id="page-discovery">
+  <nav class="nav">
+    <div class="logo" onclick="showPage('landing')">Striv<span>io</span></div>
+    <div class="nav-links">
+      <button class="nav-btn primary" onclick="showPage('auth')">Sign up</button>
+    </div>
+  </nav>
+
+  <div class="discovery-filters">
+    <div class="search-box">
+      <span style="font-size:14px;color:var(--text3);">🔍</span>
+      <input type="text" placeholder="Search creators by name, niche..." />
+    </div>
+    <div class="filter-row">
+      <button class="filter-chip active">All</button>
+      <button class="filter-chip">Gaming</button>
+      <button class="filter-chip">Fitness</button>
+      <button class="filter-chip">Beauty</button>
+      <button class="filter-chip">Tech</button>
+      <button class="filter-chip">Food</button>
+      <button class="filter-chip">Travel</button>
+      <button class="filter-chip">Finance</button>
+    </div>
+  </div>
+
+  <div class="discovery-grid">
+
+    <div class="disco-card" onclick="showPage('profile')">
+      <div class="disco-avatar">🎮</div>
+      <div class="disco-name">Alex Rivera</div>
+      <div class="disco-handle">@alexplays</div>
+      <div class="disco-stats">
+        <div class="disco-stat"><span>2.4M</span> followers</div>
+        <div class="disco-stat"><span>8.2%</span> eng. rate</div>
+      </div>
+      <div class="creator-tags"><div class="tag accent">Gaming</div></div>
+    </div>
+
+    <div class="disco-card" onclick="showPage('profile')">
+      <div class="disco-avatar">💪</div>
+      <div class="disco-name">Maya Chen</div>
+      <div class="disco-handle">@mayafit</div>
+      <div class="disco-stats">
+        <div class="disco-stat"><span>890K</span> followers</div>
+        <div class="disco-stat"><span>11.4%</span> eng. rate</div>
+      </div>
+      <div class="creator-tags"><div class="tag accent">Fitness</div></div>
+    </div>
+
+    <div class="disco-card" onclick="showPage('profile')">
+      <div class="disco-avatar">💄</div>
+      <div class="disco-name">Jordan Blake</div>
+      <div class="disco-handle">@jordanbeauty</div>
+      <div class="disco-stats">
+        <div class="disco-stat"><span>3.1M</span> followers</div>
+        <div class="disco-stat"><span>6.7%</span> eng. rate</div>
+      </div>
+      <div class="creator-tags"><div class="tag accent">Beauty</div></div>
+    </div>
+
+    <div class="disco-card" onclick="showPage('profile')">
+      <div class="disco-avatar">💻</div>
+      <div class="disco-name">Sam Park</div>
+      <div class="disco-handle">@samcodes</div>
+      <div class="disco-stats">
+        <div class="disco-stat"><span>540K</span> followers</div>
+        <div class="disco-stat"><span>9.1%</span> eng. rate</div>
+      </div>
+      <div class="creator-tags"><div class="tag accent">Tech</div></div>
+    </div>
+
+    <div class="disco-card" onclick="showPage('profile')">
+      <div class="disco-avatar">🍔</div>
+      <div class="disco-name">Priya Sharma</div>
+      <div class="disco-handle">@priyaeats</div>
+      <div class="disco-stats">
+        <div class="disco-stat"><span>1.2M</span> followers</div>
+        <div class="disco-stat"><span>13.2%</span> eng. rate</div>
+      </div>
+      <div class="creator-tags"><div class="tag accent">Food</div></div>
+    </div>
+
+    <div class="disco-card" onclick="showPage('profile')">
+      <div class="disco-avatar">✈️</div>
+      <div class="disco-name">Leo Vance</div>
+      <div class="disco-handle">@leotravels</div>
+      <div class="disco-stats">
+        <div class="disco-stat"><span>680K</span> followers</div>
+        <div class="disco-stat"><span>7.4%</span> eng. rate</div>
+      </div>
+      <div class="creator-tags"><div class="tag accent">Travel</div></div>
+    </div>
+
+  </div>
+
+  <div class="bottom-nav">
+    <button class="bottom-nav-item" onclick="showPage('landing')"><span class="bni">🏠</span><span class="bnl">Home</span></button>
+    <button class="bottom-nav-item active" onclick="showPage('discovery')"><span class="bni">🔍</span><span class="bnl">Browse</span></button>
+    <button class="bottom-nav-item" onclick="showPage('dashboard')"><span class="bni">📊</span><span class="bnl">Dashboard</span></button>
+    <button class="bottom-nav-item" onclick="showPage('profile')"><span class="bni">👤</span><span class="bnl">Profile</span></button>
+  </div>
+</div>
+
+<!-- PAGE: AUTH -->
+<div class="page" id="page-auth">
+  <nav class="nav">
+    <div class="logo" onclick="showPage('landing')">Striv<span>io</span></div>
+    <div class="nav-links">
+      <button class="nav-btn" onclick="showPage('landing')">← Back</button>
+    </div>
+  </nav>
+  <div class="auth-body">
+    <div class="auth-card">
+      <div class="auth-logo">Striv<span>io</span></div>
+      <div class="auth-sub">Create your free account</div>
+
+      <div style="font-size:12px;color:var(--text3);margin-bottom:8px;">I am a...</div>
+      <div class="role-selector">
+        <div class="role-opt active" onclick="selectRole(this)">
+          <div class="role-icon">🎬</div>
+          <div class="role-name">Creator</div>
+          <div class="role-desc">I make content</div>
+        </div>
+        <div class="role-opt" onclick="selectRole(this)">
+          <div class="role-icon">🏢</div>
+          <div class="role-name">Brand</div>
+          <div class="role-desc">I hire creators</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Full name</label>
+        <input class="form-input" type="text" placeholder="Alex Rivera" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email address</label>
+        <input class="form-input" type="email" placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" placeholder="Create a password" />
+      </div>
+
+      <button class="btn-primary" style="width:100%;font-size:14px;padding:12px;" onclick="showPage('dashboard')">Create account →</button>
+
+      <div class="divider">or continue with</div>
+
+      <button class="social-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
+
+      <div class="auth-footer">Already have an account? <a href="#" onclick="return false;">Sign in</a></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  var el=document.getElementById('page-'+id);
+  if(el){el.classList.add('active');el.scrollTop=0;window.scrollTo(0,0);}
+}
+function selectRole(el){
+  document.querySelectorAll('.role-opt').forEach(r=>r.classList.remove('active'));
+  el.classList.add('active');
+}
+document.querySelectorAll('.filter-chip').forEach(chip=>{
+  chip.addEventListener('click',function(){
+    document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+document.querySelectorAll('.dash-tab').forEach(tab=>{
+  tab.addEventListener('click',function(){
+    document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
